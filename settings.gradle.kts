@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Book Trails"
 include(":app")
- 
+include(":feature_auth_module")
+include(":ui_module")
