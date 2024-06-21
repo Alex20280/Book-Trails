@@ -23,3 +23,6 @@ rootProject.name = "Book Trails"
 include(":app")
 include(":feature_auth_module")
 include(":ui_module")
+include(":feature_reading_module")
+include(":feature_bestseller_books_module")
+include(":feature_profile_module")

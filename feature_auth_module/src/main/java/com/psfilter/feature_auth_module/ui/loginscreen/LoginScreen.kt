@@ -53,6 +53,7 @@ fun LoginScreen(
     paddingValues: PaddingValues,
     onClickForgetPassword: () -> Unit,
     onRegisterClick: () -> Unit,
+    onSignInClick: () -> Unit,
 ) {
 
     /*    val viewModel = hiltViewModel<DetailsViewModel>()
@@ -62,6 +63,7 @@ fun LoginScreen(
         paddingValues = paddingValues,
         onClickForgetPassword = onClickForgetPassword,
         onRegisterClick = onRegisterClick,
+        onSignInClick = onSignInClick,
         /*        screenDetails = screenDetails,
                 onTextClicked = {navigate(screenDetails.value.link?.toUri()?.toString() ?: "")},
                 onIconClicked = {viewModel.toggleBookmark(it)}*/
@@ -75,6 +77,7 @@ fun LoginScreenUI(
     paddingValues: PaddingValues,
     onClickForgetPassword: () -> Unit,
     onRegisterClick: () -> Unit,
+    onSignInClick: () -> Unit,
 ) {
 
     val rememberMeState = remember { mutableStateOf(false) }
@@ -175,7 +178,7 @@ fun LoginScreenUI(
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = {  },
+            onClick = { onSignInClick.invoke() },
             modifier = Modifier
                 .padding(top = 5.dp, bottom = 5.dp)
                 .fillMaxWidth(),

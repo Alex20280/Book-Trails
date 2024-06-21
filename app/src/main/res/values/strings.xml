@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Book Trails</string>
+    <string name="book_icon">Book icon</string>
+    <string name="home_page">Home page</string>
+    <string name="bestseller_screen">BestSeller Screen</string>
+    <string name="profile_screen">Profile Screen</string>
 </resources>

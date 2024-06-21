@@ -57,6 +57,13 @@ dependencies {
 
     implementation (project(":feature_auth_module"))
     implementation (project(":ui_module"))
+    implementation (project(":feature_reading_module"))
+    implementation (project(":feature_bestseller_books_module"))
+    implementation (project(":feature_profile_module"))
+
+    implementation ("androidx.compose.material:material:1.4.0")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.4.0")
+    implementation ("androidx.navigation:navigation-compose:2.5.3")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -65,7 +72,6 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    //implementation(libs.androidx.compose.ui.material3)
     implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
