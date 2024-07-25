@@ -41,6 +41,13 @@ val Typography = Typography(
         color = Color.White
     ),
 
+    labelLarge = TextStyle(
+        fontFamily = FontFamily(Font(com.booktrails.ui_module.R.font.roboto_medium)),
+        fontWeight = FontWeight.W800,
+        fontSize = 16.sp,
+        color = Color.White
+    ),
+
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,

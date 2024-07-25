@@ -57,13 +57,11 @@ dependencies {
 
     implementation (project(":feature_auth_module"))
     implementation (project(":ui_module"))
+    implementation (project(":core_module"))
     implementation (project(":feature_reading_module"))
     implementation (project(":feature_bestseller_books_module"))
     implementation (project(":feature_profile_module"))
-
-    implementation ("androidx.compose.material:material:1.4.0")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.4.0")
-    implementation ("androidx.navigation:navigation-compose:2.5.3")
+    implementation(project(":feature_book_management_module"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -80,6 +78,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation (libs.androidx.material)
+    implementation (libs.ui.tooling.preview)
 
     //Koin
     implementation (libs.koin.android)
@@ -87,7 +87,18 @@ dependencies {
     implementation (libs.koin.androidx.compose)
 
     //Compose navigation
+    implementation (libs.androidx.navigation.compose)
+    implementation (libs.accompanist.navigation.animation)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
+    //Splash screen
+    implementation (libs.androidx.core.splashscreen)
+
+    //DataStore
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.preferences.core)
+
+    //Coroutines
+    implementation (libs.kotlinx.coroutines.core)
 }

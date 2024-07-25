@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_continue_reading">Start/Continue reading</string>
+    <string name="recent_book_image">Recent book image</string>
+    <string name="recently_read">RECENTLY READ:</string>
+    <string name="continueRead">CONTINUE</string>
+    <string name="arrow_forward">Arrow forward</string>
+    <string name="item_image">Item image</string>
+    <string name="pages">" pages"</string>
+    <string name="leave_your_review">Leave your Review</string>
+</resources>

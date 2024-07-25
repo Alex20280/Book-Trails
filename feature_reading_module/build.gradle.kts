@@ -37,10 +37,11 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.runtime.android)
-    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.navigation.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -48,4 +49,15 @@ dependencies {
     //Compose
     implementation(libs.androidx.compose.ui.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+
+    //Koin
+    implementation (libs.koin.android)
+    implementation (libs.koin.core)
+    implementation (libs.koin.androidx.compose)
+
+    //Pager
+    implementation (libs.accompanist.pager)
+
+    //Lottie animation
+    implementation (libs.lottie)
 }

@@ -11,21 +11,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,7 +35,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.feature_auth_module.R
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.booktrails.ui_module.SubmitButton
+import com.booktrails.ui_module.R
 
 @Composable
 fun SignUpScreen(
@@ -49,18 +50,12 @@ fun SignUpScreen(
     onPrivacyClick: () -> Unit,
 ) {
 
-    /*    val viewModel = hiltViewModel<DetailsViewModel>()
-        val screenDetails = viewModel.feedDetails.collectAsState()*/
-
     SignUpScreenUI(
         paddingValues = paddingValues,
         onClickBackButton = onClickBackButton,
         onRegisterButtonClick = onRegisterButtonClick,
         onTosClick = onTosClick,
         onPrivacyClick = onPrivacyClick
-        /*        screenDetails = screenDetails,
-                onTextClicked = {navigate(screenDetails.value.link?.toUri()?.toString() ?: "")},
-                onIconClicked = {viewModel.toggleBookmark(it)}*/
     )
 }
 
@@ -75,9 +70,13 @@ fun SignUpScreenUI(
     onPrivacyClick: () -> Unit,
 ) {
 
-    val loginText = remember { mutableStateOf("") }
-    val passwordText = remember { mutableStateOf("") }
-    val confirmPasswordText = remember { mutableStateOf("") }
+    val loginText = rememberSaveable { mutableStateOf("") }
+    val passwordText = rememberSaveable { mutableStateOf("") }
+    val confirmPasswordText = rememberSaveable { mutableStateOf("") }
+
+    val compositionCongrats by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(com.booktrails.ui_module.R.raw.sign_up_animation)
+    )
 
     Column(
         modifier = Modifier
@@ -104,9 +103,13 @@ fun SignUpScreenUI(
 
         Text(
             modifier = Modifier.padding(top = 38.dp),
-            text = stringResource(R.string.register),
+            text = stringResource(R.string.registers),
             style = MaterialTheme.typography.headlineLarge,
         )
+
+        LottieAnimation(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            composition = compositionCongrats, iterations = 10)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -116,11 +119,11 @@ fun SignUpScreenUI(
             label = { Text(stringResource(R.string.email)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedLabelColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                unfocusedLabelColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                focusedBorderColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                unfocusedBorderColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                focusedTextColor = colorResource(id = com.booktrails.ui_module.R.color.black),
+                focusedLabelColor = colorResource(id = R.color.light_grey),
+                unfocusedLabelColor = colorResource(id = R.color.light_grey),
+                focusedBorderColor = colorResource(id = R.color.light_grey),
+                unfocusedBorderColor = colorResource(id = R.color.light_grey),
+                focusedTextColor = colorResource(id = R.color.black),
             ),
         )
 
@@ -133,11 +136,11 @@ fun SignUpScreenUI(
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedLabelColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                unfocusedLabelColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                focusedBorderColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                unfocusedBorderColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                focusedTextColor = colorResource(id = com.booktrails.ui_module.R.color.black),
+                focusedLabelColor = colorResource(id = R.color.light_grey),
+                unfocusedLabelColor = colorResource(id = R.color.light_grey),
+                focusedBorderColor = colorResource(id = R.color.light_grey),
+                unfocusedBorderColor = colorResource(id = R.color.light_grey),
+                focusedTextColor = colorResource(id = R.color.black),
             )
         )
 
@@ -150,52 +153,53 @@ fun SignUpScreenUI(
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedLabelColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                unfocusedLabelColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                focusedBorderColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                unfocusedBorderColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-                focusedTextColor = colorResource(id = com.booktrails.ui_module.R.color.black),
+                focusedLabelColor = colorResource(id = R.color.light_grey),
+                unfocusedLabelColor = colorResource(id = R.color.light_grey),
+                focusedBorderColor = colorResource(id = R.color.light_grey),
+                unfocusedBorderColor = colorResource(id = R.color.light_grey),
+                focusedTextColor = colorResource(id = R.color.black),
             )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(
-            onClick = { onRegisterButtonClick.invoke() },
-            modifier = Modifier
-                .padding(top = 5.dp, bottom = 5.dp)
-                .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = com.booktrails.ui_module.R.color.blue),
-                contentColor = colorResource(id = com.booktrails.ui_module.R.color.white),
-
-                ),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text(
-                style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
-                text = stringResource(R.string.sign_up)
-            )
-        }
+        SubmitButton(
+            onClick = onRegisterButtonClick,
+            text = stringResource(R.string.sign_up)
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         val annotatedString = buildAnnotatedString {
             append("By signing up, you agree to Book Trails ")
-            val robotoRegular = FontFamily(Font(com.booktrails.ui_module.R.font.roboto_regular))
+            val robotoRegular = FontFamily(Font(R.font.roboto_regular))
 
-            pushStringAnnotation(tag = "TOS", annotation = "TermOfService")
-            withStyle(style = SpanStyle(color = colorResource(id = com.booktrails.ui_module.R.color.blue), fontFamily = robotoRegular, textDecoration = TextDecoration.Underline)) {
-                append("Term of Service")
+            pushStringAnnotation(tag = stringResource(R.string.tos), annotation = stringResource(R.string.termofservice))
+            withStyle(
+                style = SpanStyle(
+                    color = colorResource(id = com.booktrails.ui_module.R.color.blue),
+                    fontFamily = robotoRegular,
+                    textDecoration = TextDecoration.Underline
+                )
+            ) {
+                append(stringResource(R.string.term_of_service))
             }
             pop()
 
-            append(" and ")
+            append(stringResource(R.string.and))
 
-            pushStringAnnotation(tag = "PRIVACY", annotation = "PrivacyPolicy")
-            withStyle(style = SpanStyle(color = colorResource(id = com.booktrails.ui_module.R.color.blue), fontFamily = robotoRegular, textDecoration = TextDecoration.Underline)) {
-                append("Privacy Policy")
+            pushStringAnnotation(tag = stringResource(R.string.privacy), annotation = stringResource(
+                R.string.privacypolicy
+            )
+            )
+            withStyle(
+                style = SpanStyle(
+                    color = colorResource(id = com.booktrails.ui_module.R.color.blue),
+                    fontFamily = robotoRegular,
+                    textDecoration = TextDecoration.Underline
+                )
+            ) {
+                append(stringResource(R.string.privacy_policy))
             }
             pop()
         }

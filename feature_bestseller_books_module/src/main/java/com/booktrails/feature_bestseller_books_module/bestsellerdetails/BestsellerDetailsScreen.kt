@@ -11,24 +11,20 @@ import com.booktrails.ui_module.R
 
 @Composable
 fun BestsellerDetailsScreen(
+    bestsellerIdArgs: Int
 ) {
 
-    /*    val viewModel = hiltViewModel<DetailsViewModel>()
-        val screenDetails = viewModel.feedDetails.collectAsState()*/
-
     BestsellerDetailsScreenUI(
-        /*        screenDetails = screenDetails,
-                onTextClicked = {navigate(screenDetails.value.link?.toUri()?.toString() ?: "")},
-                onIconClicked = {viewModel.toggleBookmark(it)}*/
+        bestsellerIdArgs = bestsellerIdArgs
     )
 }
 
-
 @Composable
 fun BestsellerDetailsScreenUI(
+    bestsellerIdArgs: Int
 ) {
     Text(
-        text = "BestsellerDetails Screen",
+        text = "BestsellerDetails Screen $bestsellerIdArgs",
         style = MaterialTheme.typography.headlineLarge,
         color = colorResource(id = R.color.black),
         modifier = Modifier.padding(top = 38.dp, start = 16.dp),

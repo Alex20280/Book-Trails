@@ -37,6 +37,7 @@ android {
 dependencies {
 
     implementation (project(":ui_module"))
+    implementation (project(":core_module"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -59,4 +60,6 @@ dependencies {
     implementation (libs.koin.androidx.compose)
 
 
+    //Lottie animation
+    implementation (libs.lottie)
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_book_screen">Add book screen</string>
+    <string name="manual_add">Manual add</string>
+    <string name="manual_add_screen">Manual Add Screen</string>
+    <string name="scan_complete">Scan complete</string>
+    <string name="scan_isbnscreen">Scan IsbnScreen</string>
+</resources>

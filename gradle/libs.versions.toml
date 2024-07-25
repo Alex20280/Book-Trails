@@ -1,6 +1,9 @@
 [versions]
+accompanistNavigationAnimation = "0.34.0"
+accompanistPager = "0.28.0"
 agp = "8.4.0"
 coreSplashscreen = "1.0.1"
+datastorePreferences = "1.1.1"
 koinAndroid = "3.5.6"
 koinAndroidxCompose = "3.5.6"
 koinCore = "3.5.6"
@@ -9,12 +12,15 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
+kotlinxCoroutinesCore = "1.5.1"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.8.0"
 composeBom = "2023.08.00"
 appcompat = "1.6.1"
 ksp = "1.9.0-1.0.13"
 composeNavigation = "2.8.0-beta01"
+lottie = "6.4.1"
+material = "1.6.8"
 serialization = "1.6.3"
 navigationCompose = "2.7.7"
 kotlinGradlePlugin = "1.9.0"
@@ -23,10 +29,16 @@ materialVersion = "1.12.0"
 navigationRuntimeKtx = "2.7.7"
 runtimeAndroid = "1.6.8"
 foundationLayoutAndroid = "1.6.8"
+uiToolingPreview = "1.6.8"
 
 [libraries]
+accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
+accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferences" }
+androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -47,6 +59,8 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 androidx-compose-ui-ui-graphics = {group = "androidx.compose.ui", name= "ui-graphics"}
 androidx-compose-ui-tooling-preview = {group = "androidx.compose.ui", name= "ui-tooling-preview"}
 androidx-compose-ui-material3 = {group = "androidx.compose.material3", name= "material3"}
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
@@ -56,6 +70,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
