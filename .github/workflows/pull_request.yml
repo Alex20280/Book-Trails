@@ -1,4 +1,4 @@
-name: Run Check and tests
+name: Run Check CI check and tests
 
 on:
    pull_request:
@@ -19,6 +19,9 @@ jobs:
           cache: 'gradle'
       - name: Grant execute permissions for gradlew
         run: chmod +x gradlew
+
+      - name: Run lint check
+        run: ./gradlew lint
 
       - name: Run unit tests
         run: ./gradlew clean testDebug
