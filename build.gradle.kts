@@ -12,8 +12,8 @@ plugins {
 
 sonar {
     properties {
-        property("sonar.projectKey", "test-test-test2_test-project")
-        property("sonar.organization", "test-test-test2")
+        property("sonar.projectKey", "alex-basanets")
+        property("sonar.organization", "Alex Basanets")
         property("sonar.host.url", "https://sonarcloud.io")
     }
 }
