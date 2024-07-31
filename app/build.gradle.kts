@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp.library)
     alias(libs.plugins.kotlin.serialization)
-   // alias(libs.plugins.sonarqube)
 /*    id("com.android.application")
     id("org.jetbrains.kotlin.android")*/
 }
@@ -64,9 +63,6 @@ dependencies {
     implementation (project(":feature_bestseller_books_module"))
     implementation (project(":feature_profile_module"))
     implementation(project(":feature_book_management_module"))
-
-    //implementation(libs.sonarqube.gradle.plugin)
-
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

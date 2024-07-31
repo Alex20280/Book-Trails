@@ -12,9 +12,9 @@ plugins {
 
 sonar {
     properties {
-        property("sonar.projectKey", "alex-basanets")
-        property("sonar.organization", "Alex Basanets")
-        property("sonar.host.url", "https://sonarcloud.io")
+        property ("sonar.projectKey", "alex-basanets-org_book-trails")
+        property ("sonar.organization", "alex-basanets-org")
+        property ("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
