@@ -15,13 +15,5 @@ buildscript {
     }
 
     dependencies {
-        //classpath(libs.kotlin.gradle.plugin)
-        //classpath(libs.kotlin.gradle.plugin)
-        //classpath(libs.kotlin.gradle.plugin)
-        // classpath(libs.kotlin.gradle.plugin)
-        //classpath(libs.kotlin.gradle.plugin)
-        //classpath(libs.kotlin.gradle.plugin)
-        //classpath(libs.kotlin.gradle.plugin)
-        //classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
     }
 }

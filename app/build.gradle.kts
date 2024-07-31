@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp.library)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.sonarqube)
+   // alias(libs.plugins.sonarqube)
 /*    id("com.android.application")
     id("org.jetbrains.kotlin.android")*/
 }
@@ -52,13 +52,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    sonar {
-        properties {
-            property("sonar.projectKey", "projectKey")
-            property("sonar.projectName", "projectName")
-            property("sonar.qualitygate.wait", true)
-        }
-    }
+
 }
 
 dependencies {
