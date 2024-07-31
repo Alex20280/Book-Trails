@@ -65,7 +65,7 @@ dependencies {
     implementation (project(":feature_profile_module"))
     implementation(project(":feature_book_management_module"))
 
-    implementation(libs.sonarqube.gradle.plugin)
+    //implementation(libs.sonarqube.gradle.plugin)
 
 
     implementation(libs.androidx.core.ktx)
