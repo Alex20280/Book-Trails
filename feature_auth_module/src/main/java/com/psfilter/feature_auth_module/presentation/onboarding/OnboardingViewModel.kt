@@ -1,4 +1,4 @@
-package com.psfilter.feature_auth_module.ui.onboarding
+package com.psfilter.feature_auth_module.presentation.onboarding
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

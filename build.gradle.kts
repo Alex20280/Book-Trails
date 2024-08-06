@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.ksp.library) apply false
+    id("com.google.gms.google-services") version "4.4.2" apply false
+    //id("com.google.gms.google-services") version "4.4.2"
     //id("org.sonarqube") version "5.1.0.4882"
 
 }
@@ -24,6 +26,6 @@ buildscript {
     }
 
     dependencies {
-        //classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:5.1.0.4882")
+       // classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:5.1.0.4882")
     }
 }

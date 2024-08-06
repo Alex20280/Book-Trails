@@ -1,18 +1,12 @@
 package com.project.booktrails.ui.main
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewTreeObserver
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +21,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.booktrails.core_module.UserPreferenceManager
 import com.booktrails.feature_bestseller_books_module.bestsellerdetails.BestsellerDetailsScreen
 import com.booktrails.feature_bestseller_books_module.bestsellerscreen.BestsellerScreen
 import com.booktrails.feature_book_management_module.addbookscreen.AddBookScreen
@@ -44,24 +37,17 @@ import com.booktrails.ui_module.ToolBar
 import com.project.booktrails.R
 import com.project.booktrails.ui.navigation.BottomNavigationSection
 import com.project.booktrails.ui.navigation.NavigationScreens
-import com.project.booktrails.ui.navigation.ScaleTransitionDirection
-import com.project.booktrails.ui.navigation.scaleIntoContainer
-import com.project.booktrails.ui.navigation.scaleOutOfContainer
 import com.project.booktrails.ui.theme.BookTrailsTheme
 import com.project.feature_auth_module.ui.ForgetPasswordScreen
 import com.project.feature_auth_module.ui.LoginScreen
 import com.project.feature_auth_module.ui.SignUpScreen
-import com.psfilter.feature_auth_module.ui.onboarding.OnBoardingOneScreen
-import com.psfilter.feature_auth_module.ui.onboarding.OnBoardingThreeScreen
-import com.psfilter.feature_auth_module.ui.onboarding.OnBoardingTwoScreen
-import com.psfilter.feature_auth_module.ui.onboarding.OnboardingViewModel
-import com.psfilter.feature_auth_module.ui.policy.PrivacyPolicyScreen
-import com.psfilter.feature_auth_module.ui.tos.TosScreen
+import com.psfilter.feature_auth_module.presentation.onboarding.OnBoardingOneScreen
+import com.psfilter.feature_auth_module.presentation.onboarding.OnBoardingThreeScreen
+import com.psfilter.feature_auth_module.presentation.onboarding.OnBoardingTwoScreen
+import com.psfilter.feature_auth_module.presentation.policy.PrivacyPolicyScreen
+import com.psfilter.feature_auth_module.presentation.tos.TosScreen
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MainActivity() : ComponentActivity() {
@@ -351,7 +337,7 @@ class MainActivity() : ComponentActivity() {
                             SignUpScreen(
                                 paddingValues = innerPadding,
                                 onClickBackButton = { navController.navigateUp() },
-                                onRegisterButtonClick = {}, //TODO implement registration
+                                onRegisterButtonClick = { navController.navigateUp() },
                                 onTosClick = {navController.navigate(NavigationScreens.TosScreen)},
                                 onPrivacyClick = {navController.navigate(NavigationScreens.PrivacyPolicyScreen)},
                             )

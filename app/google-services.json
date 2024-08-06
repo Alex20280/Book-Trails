@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "22704214800",
+    "project_id": "book-trails",
+    "storage_bucket": "book-trails.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22704214800:android:90b6b272cbfa90a98b0b95",
+        "android_client_info": {
+          "package_name": "com.project.booktrails"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22704214800-qqaqg1dm80akq1e1s2pqtjtdpja83mav.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.booktrails",
+            "certificate_hash": "b0e694c8229bed6e74cb57dfd99f144a07c60714"
+          }
+        },
+        {
+          "client_id": "22704214800-eocb6rdv2l6uocemvohv01eth0a0abbu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_GKlL1PvsPlZSbO7Q03p63vBTXBOTex4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22704214800-eocb6rdv2l6uocemvohv01eth0a0abbu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

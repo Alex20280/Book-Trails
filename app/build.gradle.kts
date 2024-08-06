@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp.library)
     alias(libs.plugins.kotlin.serialization)
+    id("com.google.gms.google-services")
 /*    id("com.android.application")
     id("org.jetbrains.kotlin.android")*/
 }
@@ -63,6 +64,7 @@ dependencies {
     implementation (project(":feature_bestseller_books_module"))
     implementation (project(":feature_profile_module"))
     implementation(project(":feature_book_management_module"))
+    implementation(project(":core_network_module"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -102,6 +104,14 @@ dependencies {
 
     //Coroutines
     implementation (libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation(libs.kotlinx.coroutines.reactive)
+    androidTestImplementation (libs.kotlinx.coroutines.test)
 
+    //Firebase
+    implementation(libs.firebase.bom)
+    implementation(libs.firebase.auth.ktx)
+    //implementation(libs.firebase.analytics)
 
 }

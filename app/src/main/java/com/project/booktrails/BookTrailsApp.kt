@@ -1,20 +1,23 @@
 package com.project.booktrails
 
 import android.app.Application
-import com.project.booktrails.di.appModule
-import com.project.booktrails.di.dataStoreModule
-import com.project.booktrails.di.viewModelModule
+import com.booktrails.core_network_module.domain.di.networkModule
+import com.google.firebase.FirebaseApp
+import com.project.booktrails.di.authModule
+import com.project.booktrails.di.coreModule
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.GlobalContext
+import org.koin.core.context.startKoin
 
 class BookTrailsApp: Application() {
 
     override fun onCreate() {
         super.onCreate()
 
-        GlobalContext.startKoin {
+        FirebaseApp.initializeApp(this)
+
+        startKoin {
             androidContext(this@BookTrailsApp)
-            modules(listOf(appModule, viewModelModule, dataStoreModule))
+            modules(listOf(authModule, coreModule))
         }
     }
 }

@@ -1,17 +1,28 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp.library)
 }
 
 android {
-    namespace = "com.booktrails.ui_module"
+    namespace = "com.booktrails.core_network_module"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 24
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -19,14 +30,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0"
-    }
-
 }
 
 dependencies {
@@ -38,11 +41,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(libs.androidx.runtime.android)
-    implementation(libs.androidx.foundation.layout.android)
-    implementation(libs.androidx.material3.android)
+    //Retrofit
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.logging.interceptor)
 
-    //Compose
-    implementation(libs.androidx.compose.ui.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
+    //Koin
+    implementation (libs.koin.android)
+    implementation (libs.koin.core)
 }

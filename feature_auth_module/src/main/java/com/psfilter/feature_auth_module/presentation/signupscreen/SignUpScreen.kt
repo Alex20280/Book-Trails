@@ -1,5 +1,6 @@
 package com.project.feature_auth_module.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,11 +19,15 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,8 +43,14 @@ import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.booktrails.core_module.errorhandling.RequestResult
 import com.booktrails.ui_module.SubmitButton
 import com.booktrails.ui_module.R
+import com.psfilter.feature_auth_module.presentation.onboarding.OnboardingViewModel
+import com.psfilter.feature_auth_module.presentation.signupscreen.SignUpViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.Error
 
 @Composable
 fun SignUpScreen(
@@ -50,10 +61,36 @@ fun SignUpScreen(
     onPrivacyClick: () -> Unit,
 ) {
 
+    val signUpViewModel: SignUpViewModel = koinViewModel()
+    val errorMessage by signUpViewModel.errorMessage.collectAsState()
+    val context = LocalContext.current
+    val registrationResult by signUpViewModel.registrationResult.collectAsState()
+
+    val loginText = rememberSaveable { mutableStateOf("") }
+    val passwordText = rememberSaveable { mutableStateOf("") }
+    val confirmPasswordText = rememberSaveable { mutableStateOf("") }
+
+
+    LaunchedEffect(registrationResult) {
+        if (registrationResult is RequestResult.Success) {
+            onRegisterButtonClick.invoke()
+        }
+    }
+
+    errorMessage?.let { message ->
+        LaunchedEffect(message) {
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
     SignUpScreenUI(
+        loginText = loginText,
+        passwordText = passwordText,
+        confirmPasswordText = confirmPasswordText,
         paddingValues = paddingValues,
         onClickBackButton = onClickBackButton,
-        onRegisterButtonClick = onRegisterButtonClick,
+        onRegisterButtonClick = {signUpViewModel.registerUser(loginText.value, passwordText.value, confirmPasswordText.value)}, // TODO remove
         onTosClick = onTosClick,
         onPrivacyClick = onPrivacyClick
     )
@@ -63,6 +100,9 @@ fun SignUpScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreenUI(
+    loginText: MutableState<String>,
+    passwordText: MutableState<String>,
+    confirmPasswordText: MutableState<String>,
     paddingValues: PaddingValues,
     onClickBackButton: () -> Unit,
     onRegisterButtonClick: () -> Unit,
@@ -70,12 +110,8 @@ fun SignUpScreenUI(
     onPrivacyClick: () -> Unit,
 ) {
 
-    val loginText = rememberSaveable { mutableStateOf("") }
-    val passwordText = rememberSaveable { mutableStateOf("") }
-    val confirmPasswordText = rememberSaveable { mutableStateOf("") }
-
     val compositionCongrats by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(com.booktrails.ui_module.R.raw.sign_up_animation)
+        spec = LottieCompositionSpec.RawRes(R.raw.sign_up_animation)
     )
 
     Column(
@@ -194,7 +230,7 @@ fun SignUpScreenUI(
             )
             withStyle(
                 style = SpanStyle(
-                    color = colorResource(id = com.booktrails.ui_module.R.color.blue),
+                    color = colorResource(id = R.color.blue),
                     fontFamily = robotoRegular,
                     textDecoration = TextDecoration.Underline
                 )

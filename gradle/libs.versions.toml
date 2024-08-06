@@ -2,8 +2,10 @@
 accompanistNavigationAnimation = "0.34.0"
 accompanistPager = "0.28.0"
 agp = "8.4.0"
+converterGson = "2.9.0"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.1"
+firebaseBom = "33.1.2"
 koinAndroid = "3.5.6"
 koinAndroidxCompose = "3.5.6"
 koinCore = "3.5.6"
@@ -12,15 +14,18 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-kotlinxCoroutinesCore = "1.5.1"
+kotlinxCoroutinesCore = "1.7.3"
+lifecycle-viewmodel-savedstate = "2.8.4"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.8.0"
 composeBom = "2023.08.00"
 appcompat = "1.6.1"
 ksp = "1.9.0-1.0.13"
 composeNavigation = "2.8.0-beta01"
+loggingInterceptor = "4.10.0"
 lottie = "6.4.1"
 material = "1.6.8"
+retrofit = "2.9.0"
 serialization = "1.6.3"
 navigationCompose = "2.7.7"
 kotlinGradlePlugin = "1.9.0"
@@ -32,6 +37,9 @@ foundationLayoutAndroid = "1.6.8"
 sonarqubeGradlePlugin = "5.1.0.4882"
 uiToolingPreview = "1.6.8"
 sonar = "5.1.0.4882"
+firebaseAuthKtx = "23.0.0"
+firebase-analytics = "22.02"
+gms = "4.4.2"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
@@ -41,6 +49,10 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferences" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics"}
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -61,7 +73,7 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 androidx-compose-ui-ui-graphics = {group = "androidx.compose.ui", name= "ui-graphics"}
 androidx-compose-ui-tooling-preview = {group = "androidx.compose.ui", name= "ui-tooling-preview"}
 androidx-compose-ui-material3 = {group = "androidx.compose.material3", name= "material3"}
-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
@@ -72,8 +84,14 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 sonarqube-gradle-plugin = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version.ref = "sonar" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesCore" }
+androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycle-viewmodel-savedstate" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -81,4 +99,5 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 android-library = { id = "com.android.library", version.ref = "agp" }
 ksp-library = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-gms = {id = "com.google.gms.google-services", version.ref = "gms"}
 sonarqube = { id = "org.sonarqube", version.ref = "sonar" }

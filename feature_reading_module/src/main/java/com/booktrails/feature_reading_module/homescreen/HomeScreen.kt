@@ -52,7 +52,6 @@ fun HomeScreen(
     navigateToAddBookScreen: () -> Unit,
 ) {
 
-    val context = LocalContext.current
     val bookList = listOf(
         Books(
             id = 1,
@@ -239,7 +238,7 @@ fun LoginScreenUI(
                 TabRow(
                     selectedTabIndex = selectedTabIndex,
                     indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
+                        TabRowDefaults.SecondaryIndicator(  //Indicator
                             Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
                             color = colorResource(id = R.color.blue),
                             height = 3.dp // You can customize the height of the indicator

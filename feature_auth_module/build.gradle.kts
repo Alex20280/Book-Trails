@@ -2,11 +2,9 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp.library)
+    id("com.google.gms.google-services")
+
 }
-/*plugins {
-    `android-library`
-    `kotlin-android`
-}*/
 
 android {
     namespace = "com.project.feature_auth_module"
@@ -14,7 +12,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 34
     }
 
     compileOptions {
@@ -38,6 +35,7 @@ dependencies {
 
     implementation (project(":ui_module"))
     implementation (project(":core_module"))
+    implementation(project(":core_network_module"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -59,7 +57,11 @@ dependencies {
     implementation (libs.koin.core)
     implementation (libs.koin.androidx.compose)
 
-
     //Lottie animation
     implementation (libs.lottie)
+    
+    //Firebase
+    implementation(libs.firebase.bom)
+    implementation(libs.firebase.auth.ktx)
+    //implementation(libs.firebase.analytics)
 }
