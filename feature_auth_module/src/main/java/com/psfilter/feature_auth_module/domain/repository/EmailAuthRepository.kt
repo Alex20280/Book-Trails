@@ -1,6 +1,5 @@
-package com.psfilter.feature_auth_module.domain
+package com.psfilter.feature_auth_module.domain.repository
 
-import android.provider.ContactsContract.Data
 import com.booktrails.core_module.errorhandling.DataError
 import com.booktrails.core_module.errorhandling.RequestResult
 import com.google.android.gms.tasks.Task
@@ -15,4 +14,6 @@ abstract class EmailAuthRepository {
     abstract suspend fun resetPassword(email: String): RequestResult<Task<Void>, DataError.Firebase>
 
     abstract suspend fun getUserUd() : RequestResult<String?, DataError>
+
+    abstract suspend fun logOut(): Unit
 }

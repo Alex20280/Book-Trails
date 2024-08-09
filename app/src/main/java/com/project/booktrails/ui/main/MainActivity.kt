@@ -147,6 +147,9 @@ class MainActivity() : ComponentActivity() {
                                 } },
                                 navigateToLoginScreen = {navController.navigate(NavigationScreens.LoginScreen){
                                     popUpTo(NavigationScreens.OnBoardingOneScreen) { inclusive = true }
+                                } },
+                                navigateToHomeScreen = {navController.navigate(NavigationScreens.HomeScreen){
+                                    popUpTo(NavigationScreens.OnBoardingOneScreen) { inclusive = true }
                                 } }
                             )
                         }
@@ -333,7 +336,6 @@ class MainActivity() : ComponentActivity() {
                             popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
                             popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
                         ){
-                            val context = LocalContext.current
                             SignUpScreen(
                                 paddingValues = innerPadding,
                                 onClickBackButton = { navController.navigateUp() },
@@ -352,7 +354,7 @@ class MainActivity() : ComponentActivity() {
                             ForgetPasswordScreen(
                                 paddingValues = innerPadding,
                                 onClickBackButton = { navController.navigateUp() },
-                                onRestorePasswordClick = { }) //TODO Restore Password Click
+                                onRestorePasswordClick = { navController.navigateUp()})
                         }
 
                         navController.addOnDestinationChangedListener { _, destination, _ ->

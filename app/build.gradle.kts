@@ -1,11 +1,18 @@
+import java.util.Properties
+
+val props = Properties().apply {
+    load(project.rootProject.file("gradle.properties").inputStream())
+}
+
+val webClientIdDebug = props.getProperty("web.client.id.debug")
+//val webClientIdDebug = "22704214800-eocb6rdv2l6uocemvohv01eth0a0abbu.apps.googleusercontent.com"
+
 plugins {
-   alias(libs.plugins.android.application)
+    alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp.library)
     alias(libs.plugins.kotlin.serialization)
-    id("com.google.gms.google-services")
-/*    id("com.android.application")
-    id("org.jetbrains.kotlin.android")*/
+    alias(libs.plugins.gms)
 }
 
 android {
@@ -26,12 +33,21 @@ android {
     }
 
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        getByName("release") {
+            isMinifyEnabled = true
+            isDebuggable = false
+            buildConfigField("String", "WEB_CLIENT_ID", webClientIdDebug)
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
+        getByName("debug") {
+            isMinifyEnabled = false
+            isDebuggable = true
+            buildConfigField("String", "WEB_CLIENT_ID", webClientIdDebug)
         }
     }
     compileOptions {
@@ -43,6 +59,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.0"
@@ -57,12 +74,12 @@ android {
 
 dependencies {
 
-    implementation (project(":feature_auth_module"))
-    implementation (project(":ui_module"))
-    implementation (project(":core_module"))
-    implementation (project(":feature_reading_module"))
-    implementation (project(":feature_bestseller_books_module"))
-    implementation (project(":feature_profile_module"))
+    implementation(project(":feature_auth_module"))
+    implementation(project(":ui_module"))
+    implementation(project(":core_module"))
+    implementation(project(":feature_reading_module"))
+    implementation(project(":feature_bestseller_books_module"))
+    implementation(project(":feature_profile_module"))
     implementation(project(":feature_book_management_module"))
     implementation(project(":core_network_module"))
 
@@ -81,37 +98,33 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation (libs.androidx.material)
-    implementation (libs.ui.tooling.preview)
+    implementation(libs.androidx.material)
+    implementation(libs.ui.tooling.preview)
 
     //Koin
-    implementation (libs.koin.android)
-    implementation (libs.koin.core)
-    implementation (libs.koin.androidx.compose)
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
 
     //Compose navigation
-    implementation (libs.androidx.navigation.compose)
-    implementation (libs.accompanist.navigation.animation)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.accompanist.navigation.animation)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
     //Splash screen
-    implementation (libs.androidx.core.splashscreen)
+    implementation(libs.androidx.core.splashscreen)
 
     //DataStore
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.preferences.core)
 
-    //Coroutines
-    implementation (libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
-    implementation(libs.kotlinx.coroutines.reactive)
-    androidTestImplementation (libs.kotlinx.coroutines.test)
-
     //Firebase
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
-    //implementation(libs.firebase.analytics)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.analytics)
 
+    // Google sign in
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 }

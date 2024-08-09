@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SubmitButton(
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean
 ) {
     Button(
         onClick = { onClick.invoke() },
@@ -27,7 +28,8 @@ fun SubmitButton(
             containerColor = colorResource(id = com.booktrails.ui_module.R.color.blue),
             contentColor = colorResource(id = com.booktrails.ui_module.R.color.white),
         ),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        enabled = enabled
     ) {
         Text(
             text = text,

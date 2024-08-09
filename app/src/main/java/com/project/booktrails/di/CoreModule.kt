@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.booktrails.core_module.UserPreferenceManager
+import com.booktrails.core_module.service.UserPreferenceManager
 import org.koin.dsl.module
 
 val coreModule = module {

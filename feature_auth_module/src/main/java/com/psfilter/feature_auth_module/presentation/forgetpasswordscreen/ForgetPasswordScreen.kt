@@ -1,5 +1,6 @@
 package com.project.feature_auth_module.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,16 +21,26 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.booktrails.core_module.errorhandling.RequestResult
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
+import com.psfilter.feature_auth_module.presentation.forgetpasswordscreen.ForgetPasswordViewModel
+import com.psfilter.feature_auth_module.presentation.signupscreen.SignUpViewModel
+import com.psfilter.feature_auth_module.domain.validationservice.EmailState
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ForgetPasswordScreen(
@@ -38,29 +49,43 @@ fun ForgetPasswordScreen(
     onRestorePasswordClick: () -> Unit,
 ) {
 
-    /*    val viewModel = hiltViewModel<DetailsViewModel>()
-        val screenDetails = viewModel.feedDetails.collectAsState()*/
+    val forgetPasswordViewModel: ForgetPasswordViewModel = koinViewModel()
+    val errorMessage by forgetPasswordViewModel.errorMessage.collectAsState()
+    val context = LocalContext.current
+    val resetPasswordResult by forgetPasswordViewModel.resetPasswordResult.collectAsState()
+
+    val loginText = remember { EmailState() }
+
+    LaunchedEffect(resetPasswordResult) {
+        if (resetPasswordResult is RequestResult.Success) {
+            onRestorePasswordClick.invoke()
+            forgetPasswordViewModel.setResetPasswordResult(RequestResult.None)
+        }
+    }
+
+    errorMessage?.let { message ->
+        LaunchedEffect(message) {
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     ForgetPasswordScreenUI(
+        loginText = loginText,
         paddingValues = paddingValues,
         onClickBackButton = onClickBackButton,
-        onRestorePasswordClick = onRestorePasswordClick
-        /*        screenDetails = screenDetails,
-                onTextClicked = {navigate(screenDetails.value.link?.toUri()?.toString() ?: "")},
-                onIconClicked = {viewModel.toggleBookmark(it)}*/
+        onRestorePasswordClick = {
+            forgetPasswordViewModel.resetPassword(loginText.text)
+        },
     )
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgetPasswordScreenUI(
+    loginText: EmailState,
     paddingValues: PaddingValues,
     onClickBackButton: () -> Unit,
     onRestorePasswordClick: () -> Unit
 ) {
-
-    val emailText = rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -76,49 +101,74 @@ fun ForgetPasswordScreenUI(
     ) {
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        //TODO: Bug - when click twice go back to splash screen
-        Image(
-            modifier = Modifier
-                .clickable { onClickBackButton.invoke() }
-                .size(24.dp),
-            painter = painterResource(id = R.drawable.arrow_back_icon),
-            contentDescription = stringResource(R.string.arrow_back)
-        )
-
-        Text(
-            modifier = Modifier.padding(top = 38.dp),
-            text = stringResource(R.string.reset_password),
-            style = MaterialTheme.typography.headlineLarge,
-         )
-        Text(
-            modifier = Modifier.padding(top = 16.dp),
-            text = stringResource(R.string.type_your_email_and_we_will_send_a_link_to_reset_your_password),
-            style = MaterialTheme.typography.bodyMedium,
-        )
-
+        ArrowBack(onClickBackButton) //TODO: Bug - when click twice go back to splash screen
+        ResetTitleText()
+        MainText()
         Spacer(modifier = Modifier.height(24.dp))
-
-        OutlinedTextField(
-            value = emailText.value,
-            onValueChange = { emailText.value = it },
-            label = { Text(stringResource(R.string.email)) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedLabelColor = colorResource(id = R.color.light_grey),
-                unfocusedLabelColor = colorResource(id = R.color.light_grey),
-                focusedBorderColor = colorResource(id = R.color.light_grey),
-                unfocusedBorderColor = colorResource(id = R.color.light_grey),
-                focusedTextColor = colorResource(id = R.color.black),
-            ),
-        )
-
+        ForgetPassEmailEditText(loginText)
         Spacer(modifier = Modifier.height(8.dp))
-
         SubmitButton(
             onClick = onRestorePasswordClick,
-            text = stringResource(R.string.send_email)
+            text = stringResource(R.string.send_email),
+            enabled = loginText.isValid()
         )
-
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ForgetPassEmailEditText(loginText: EmailState) {
+    OutlinedTextField(
+        value = loginText.text,
+        onValueChange = {
+            loginText.text = it
+            if (loginText.text.isNotEmpty()) {
+                loginText.validate()
+            } else {
+                loginText.error = null
+            }
+        },
+        label = { Text(stringResource(R.string.email)) },
+        modifier = Modifier.fillMaxWidth(),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedLabelColor = colorResource(id = R.color.light_grey),
+            unfocusedLabelColor = colorResource(id = R.color.light_grey),
+            focusedBorderColor = colorResource(id = R.color.light_grey),
+            unfocusedBorderColor = colorResource(id = R.color.light_grey),
+            focusedTextColor = colorResource(id = R.color.black),
+        ),
+        isError = loginText.error != null
+    )
+    loginText.error?.let { error ->
+        ErrorField(error)
+    }
+}
+
+@Composable
+fun MainText() {
+    Text(
+        modifier = Modifier.padding(top = 16.dp),
+        text = stringResource(R.string.type_your_email_and_we_will_send_a_link_to_reset_your_password),
+        style = MaterialTheme.typography.bodyMedium,
+    )
+}
+
+@Composable
+fun ResetTitleText() {
+    Text(
+        modifier = Modifier.padding(top = 38.dp),
+        text = stringResource(R.string.reset_password),
+        style = MaterialTheme.typography.headlineLarge,
+    )
+}
+
+@Composable
+fun ArrowBack(onClickBackButton: () -> Unit) {
+    Image(
+        modifier = Modifier
+            .clickable { onClickBackButton.invoke() }
+            .size(24.dp),
+        painter = painterResource(id = R.drawable.arrow_back_icon),
+        contentDescription = stringResource(R.string.arrow_back)
+    )
 }

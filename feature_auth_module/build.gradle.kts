@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp.library)
-    id("com.google.gms.google-services")
-
+    alias(libs.plugins.gms)
+    alias(libs.plugins.parcelize)
 }
 
 android {
@@ -51,6 +51,7 @@ dependencies {
     //Compose
     implementation(libs.androidx.compose.ui.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation ("androidx.activity:activity-compose:1.9.1")
 
     //Koin
     implementation (libs.koin.android)
@@ -61,7 +62,11 @@ dependencies {
     implementation (libs.lottie)
     
     //Firebase
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
-    //implementation(libs.firebase.analytics)
+    implementation(libs.firebase.firestore)
+
+    // Google sign in
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+
 }

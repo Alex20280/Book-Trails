@@ -33,6 +33,8 @@ android {
 dependencies {
 
     implementation(project(":ui_module"))
+    implementation (project(":core_module"))
+    implementation (project(":feature_auth_module"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -47,4 +49,9 @@ dependencies {
     //Compose
     implementation(libs.androidx.compose.ui.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+
+    //Koin
+    implementation (libs.koin.android)
+    implementation (libs.koin.core)
+    implementation (libs.koin.androidx.compose)
 }

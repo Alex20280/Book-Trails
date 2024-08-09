@@ -68,7 +68,7 @@ fun OnBoardingTwoScreenUI(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 16.dp)
         ) {
-            SubmitButton(text = "Next", onClick = onNextClick)
+            SubmitButton(text = "Next", onClick = onNextClick, enabled = true) // TODO
         }
     }
 

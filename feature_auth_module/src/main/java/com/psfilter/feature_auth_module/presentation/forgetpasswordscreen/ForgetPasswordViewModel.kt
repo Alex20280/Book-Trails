@@ -1,42 +1,42 @@
-package com.psfilter.feature_auth_module.presentation.signupscreen
+package com.psfilter.feature_auth_module.presentation.forgetpasswordscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.booktrails.core_module.errorhandling.DataError
 import com.booktrails.core_module.errorhandling.RequestResult
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.psfilter.feature_auth_module.domain.usecase.EmailSignUpUseCase
+import com.psfilter.feature_auth_module.domain.usecase.EmailPasswordResetUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SignUpViewModel(
-    private val emailSignInUseCase: EmailSignUpUseCase
+class ForgetPasswordViewModel (
+    private val forgetPasswordUseCase: EmailPasswordResetUseCase
 ) : ViewModel() {
 
-    private val _registrationResult = MutableStateFlow<RequestResult<Boolean, DataError>>(RequestResult.None)
-    val registrationResult: StateFlow<RequestResult<Boolean, DataError>> = _registrationResult.asStateFlow()
-    fun setRegistrationResult(result: RequestResult<Boolean, DataError>) {
-        _registrationResult.value = result
+    private val _resetPasswordResult = MutableStateFlow<RequestResult<Boolean, DataError>>(
+        RequestResult.None)
+    val resetPasswordResult: StateFlow<RequestResult<Boolean, DataError>> = _resetPasswordResult.asStateFlow()
+    fun setResetPasswordResult(result: RequestResult<Boolean, DataError>) {
+        _resetPasswordResult.value = result
     }
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
-    fun registerUser(email: String, password: String, confirmPasswordText: String) {
+    fun resetPassword(email: String) {
         viewModelScope.launch {
-            val signInResponse = emailSignInUseCase.registerUser(email, password)
+            val signInResponse = forgetPasswordUseCase.resetPassword(email)
             checkEmailRegistrationResponse(signInResponse)
         }
     }
 
-    private fun checkEmailRegistrationResponse(response: RequestResult<Task<AuthResult>,  DataError.Firebase>) {
+    private fun checkEmailRegistrationResponse(response: RequestResult<Task<Void>, DataError.Firebase>) {
         viewModelScope.launch {
             when (response) {
                 is RequestResult.Success -> {
-                    _registrationResult.value = RequestResult.Success(true)
+                    _resetPasswordResult.value = RequestResult.Success(true)
                 }
                 is RequestResult.Error -> {
                     handlePasswordError(response.error)
@@ -48,7 +48,7 @@ class SignUpViewModel(
         }
     }
 
-    private fun handlePasswordError(error: DataError) {
+    private fun handlePasswordError(error: DataError) {  //TODO: check error types
         val message = when (error) {
             DataError.Firebase.REGISTRATION_PROBLEM -> "Registration problem"
             DataError.Firebase.LOGIN_PROBLEM -> "Login problem"
@@ -62,6 +62,3 @@ class SignUpViewModel(
     }
 
 }
-
-
-

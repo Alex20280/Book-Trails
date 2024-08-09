@@ -37,9 +37,9 @@ foundationLayoutAndroid = "1.6.8"
 sonarqubeGradlePlugin = "5.1.0.4882"
 uiToolingPreview = "1.6.8"
 sonar = "5.1.0.4882"
-firebaseAuthKtx = "23.0.0"
-firebase-analytics = "22.02"
 gms = "4.4.2"
+parcelize = "1.8.10"
+googleid = "1.1.1"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
@@ -50,9 +50,12 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferences" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics"}
+
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx"}
+firebase-firestore = { module = "com.google.firebase:firebase-firestore"}
+firebase-analytics = { module = "com.google.firebase:firebase-analytics"}
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -99,5 +102,6 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 android-library = { id = "com.android.library", version.ref = "agp" }
 ksp-library = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-google-gms = {id = "com.google.gms.google-services", version.ref = "gms"}
+gms = {id = "com.google.gms.google-services", version.ref="gms"}
+parcelize = {id = "org.jetbrains.kotlin.plugin.parcelize", version.ref="parcelize"}
 sonarqube = { id = "org.sonarqube", version.ref = "sonar" }

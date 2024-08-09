@@ -33,6 +33,8 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.booktrails.feature_reading_module.homescreen.model.Books
@@ -45,6 +47,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.sp
+import com.booktrails.core_module.errorhandling.RequestResult
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
@@ -52,7 +56,7 @@ fun HomeScreen(
     navigateToAddBookScreen: () -> Unit,
 ) {
 
-    val bookList = listOf(
+/*    val bookList = listOf(
         Books(
             id = 1,
             imageRes = R.drawable.potter_image,
@@ -125,7 +129,10 @@ fun HomeScreen(
             readStatus = ReadStatus.TO_READ,
             rating = 0
         )
-    )
+    )*/
+    val homeScreenViewModel: HomeScreenViewModel = koinViewModel()
+    val bookList by homeScreenViewModel.bookList.collectAsState()
+
 
     LoginScreenUI(
         bookList = bookList,

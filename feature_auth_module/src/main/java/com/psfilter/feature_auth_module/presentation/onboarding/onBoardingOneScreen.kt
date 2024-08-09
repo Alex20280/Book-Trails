@@ -27,14 +27,20 @@ import org.koin.androidx.compose.koinViewModel
 fun OnBoardingOneScreen(
     paddingValues: PaddingValues,
     onNextClick: () -> Unit,
-    navigateToLoginScreen:() -> Unit
+    navigateToLoginScreen:() -> Unit,
+    navigateToHomeScreen:() -> Unit
 ) {
     val viewModel: OnboardingViewModel = koinViewModel()
     val hasSeenOnboarding by viewModel.hasSeenOnboarding.collectAsState()
+    val isUserSignedInWithEmail by viewModel.isUserSignedInWithEmail.collectAsState()
 
     LaunchedEffect(hasSeenOnboarding) {
         if (hasSeenOnboarding == true) {
-            navigateToLoginScreen.invoke()
+            if(isUserSignedInWithEmail){
+                navigateToHomeScreen.invoke()
+            } else {
+                navigateToLoginScreen.invoke()
+            }
         }
     }
 
@@ -42,7 +48,6 @@ fun OnBoardingOneScreen(
             paddingValues = paddingValues,
             onNextClick = {onNextClick.invoke()}
         )
-
 
 }
 
@@ -83,7 +88,7 @@ fun OnBoardingOneScreenUI(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 16.dp)
         ) {
-            SubmitButton(text = "Next", onClick = onNextClick)
+            SubmitButton(text = "Next", onClick = onNextClick, enabled = true) // TODO
         }
     }
 

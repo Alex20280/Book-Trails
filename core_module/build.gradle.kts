@@ -1,12 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    //alias(libs.plugins.ksp.library)
 }
-/*plugins {
-    `android-library`
-    `kotlin-android`
-}*/
 
 android {
     namespace = "com.booktrails.core_module"
@@ -49,5 +44,13 @@ dependencies {
     //DataStore
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.preferences.core)
+
+    //Coroutines
+    implementation (libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation(libs.kotlinx.coroutines.reactive)
+    androidTestImplementation (libs.kotlinx.coroutines.test)
+
 
 }
