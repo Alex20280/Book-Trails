@@ -6,5 +6,5 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 enum class SignInModel (val value: String)  : Parcelable {
-    EMAIL ("Email/Password"), GOOGLE("Google"), FACEBOOK("Facebook")
+    EMAIL ("Email/Password"), GMAIL("Gmail"), FACEBOOK("Facebook")
 }

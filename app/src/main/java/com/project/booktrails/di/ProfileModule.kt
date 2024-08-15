@@ -6,5 +6,5 @@ import org.koin.dsl.module
 
 val profileModule = module {
 
-    viewModel { ProfileScreenViewModel(get()) }
+    viewModel { ProfileScreenViewModel(get(), get()) }
 }

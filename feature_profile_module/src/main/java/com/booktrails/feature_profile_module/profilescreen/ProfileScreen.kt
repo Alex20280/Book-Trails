@@ -12,6 +12,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.booktrails.feature_profile_module.profilescreen.state.LogoutState
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.TopBarBackground
 import com.psfilter.feature_auth_module.presentation.signupscreen.SignUpViewModel
@@ -33,11 +35,18 @@ fun ProfileScreen(
 ) {
 
     val profileScreenViewModel: ProfileScreenViewModel = koinViewModel()
+    val logoutState by profileScreenViewModel.logoutState.collectAsState()
+
+    LaunchedEffect(logoutState) {
+        if (logoutState == LogoutState.SUCCESS) {
+            profileScreenViewModel.setLogoutState(LogoutState.NONE)
+            navigateToLogInScreen.invoke()
+        }
+    }
 
     ProfileScreenUI(
         onLogOutClick = {
             profileScreenViewModel.logout()
-            navigateToLogInScreen.invoke()
         },
         onSettingClick = { navigateToSettingScreen.invoke() },
         onContactDevClick = { navigateToContactDevScreen.invoke() }

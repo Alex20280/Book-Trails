@@ -16,8 +16,11 @@ class SignUpViewModel(
     private val emailSignInUseCase: EmailSignUpUseCase
 ) : ViewModel() {
 
-    private val _registrationResult = MutableStateFlow<RequestResult<Boolean, DataError>>(RequestResult.None)
-    val registrationResult: StateFlow<RequestResult<Boolean, DataError>> = _registrationResult.asStateFlow()
+    private val _registrationResult =
+        MutableStateFlow<RequestResult<Boolean, DataError>>(RequestResult.None)
+    val registrationResult: StateFlow<RequestResult<Boolean, DataError>> =
+        _registrationResult.asStateFlow()
+
     fun setRegistrationResult(result: RequestResult<Boolean, DataError>) {
         _registrationResult.value = result
     }
@@ -25,28 +28,35 @@ class SignUpViewModel(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
-    fun registerUser(email: String, password: String, confirmPasswordText: String) {
+    fun registerUser(email: String, password: String) {
         viewModelScope.launch {
             val signInResponse = emailSignInUseCase.registerUser(email, password)
             checkEmailRegistrationResponse(signInResponse)
         }
     }
-
-    private fun checkEmailRegistrationResponse(response: RequestResult<Task<AuthResult>,  DataError.Firebase>) {
-        viewModelScope.launch {
-            when (response) {
-                is RequestResult.Success -> {
-                    _registrationResult.value = RequestResult.Success(true)
+    private fun checkEmailRegistrationResponse(response: RequestResult<Task<AuthResult>, DataError.Firebase>) {
+        when (response) {
+            is RequestResult.Success -> {
+                response.data.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        viewModelScope.launch {
+                            emailSignInUseCase.createFirestoreAccount(task)
+                            _registrationResult.value = RequestResult.Success(true)
+                        }
+                    }
                 }
-                is RequestResult.Error -> {
-                    handlePasswordError(response.error)
-                }
-                is RequestResult.Loading -> Unit
-
-                is RequestResult.None -> Unit
             }
+
+            is RequestResult.Error -> {
+                handlePasswordError(response.error)
+            }
+
+            is RequestResult.Loading -> Unit
+
+            is RequestResult.None -> Unit
         }
     }
+
 
     private fun handlePasswordError(error: DataError) {
         val message = when (error) {

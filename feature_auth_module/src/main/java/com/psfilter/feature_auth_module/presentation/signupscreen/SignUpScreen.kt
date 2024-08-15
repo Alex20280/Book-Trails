@@ -94,8 +94,7 @@ fun SignUpScreen(
         onRegisterButtonClick = {
             signUpViewModel.registerUser(
                 loginText.text,
-                passwordText.text,
-                confirmPasswordText.text
+                passwordText.text
             )
         }, // TODO remove
         onTosClick = onTosClick,

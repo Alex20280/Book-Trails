@@ -5,6 +5,7 @@ import com.booktrails.core_module.errorhandling.RequestResult
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.psfilter.feature_auth_module.domain.repository.EmailAuthRepository
 import kotlinx.coroutines.tasks.await
 
@@ -31,7 +32,6 @@ class EmailAuthRepositoryImpl(
         return try {
             val authResultTask = auth.signInWithEmailAndPassword(email, password)
             authResultTask.await()
-            // If you reach this point, the task is considered successful
             RequestResult.Success(authResultTask.result)
         } catch (e: Exception) {
             RequestResult.Error(DataError.Firebase.LOGIN_PROBLEM)
@@ -48,17 +48,17 @@ class EmailAuthRepositoryImpl(
         }
     }
 
-
-    override suspend fun getUserUd():  RequestResult<String?, DataError.Firebase> {
-        return try {
-            RequestResult.Success(auth.uid)
-        } catch (e: Exception) {
-            RequestResult.Error(DataError.Firebase.UID_PROBLEM)
-        }
-    }
-
     override suspend fun logOut() {
        auth.signOut()
+    }
+
+    override suspend fun getAuthProviders(): List<String>? {
+        val user = FirebaseAuth.getInstance().currentUser
+        return user?.providerData?.map { it.providerId }
+    }
+
+    override suspend fun getFirebaseAuth(): FirebaseUser? {
+        return auth.currentUser
     }
 
 }

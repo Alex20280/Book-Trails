@@ -1,5 +1,6 @@
 package com.project.feature_auth_module.ui
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -100,6 +101,7 @@ fun LoginScreen(
     errorMessage?.let { message ->
         LaunchedEffect(message) {
             Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            logInViewModel.setErrorMessage(null)
         }
     }
 

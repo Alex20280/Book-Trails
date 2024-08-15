@@ -6,7 +6,6 @@ import com.booktrails.core_module.errorhandling.DataError
 import com.booktrails.core_module.errorhandling.RequestResult
 import com.booktrails.core_module.service.UserPreferenceManager
 import com.psfilter.feature_auth_module.domain.usecase.EmailLogInUseCase
-import com.psfilter.feature_auth_module.domain.usecase.EmailSignUpUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -19,8 +18,8 @@ class OnboardingViewModel (
     private val _hasSeenOnboarding = MutableStateFlow<Boolean?>(null)
     val hasSeenOnboarding: StateFlow<Boolean?> = _hasSeenOnboarding
 
-    private val _isUserSignedInWithEmail = MutableStateFlow<Boolean>(false)
-    val isUserSignedInWithEmail: StateFlow<Boolean> = _isUserSignedInWithEmail
+    private val _isUserSignedIn = MutableStateFlow<Boolean>(false)
+    val isUserSignedIn: StateFlow<Boolean> = _isUserSignedIn
 
     init {
         viewModelScope.launch {
@@ -33,10 +32,10 @@ class OnboardingViewModel (
     private fun handleSignInState(state: RequestResult<Unit, DataError.Firebase>) {
         when (state) {
             is RequestResult.Success -> {
-                _isUserSignedInWithEmail.value = true
+                _isUserSignedIn.value = true
             }
             is RequestResult.Error -> {
-                _isUserSignedInWithEmail.value = false
+                _isUserSignedIn.value = false
             }
             else -> false
         }

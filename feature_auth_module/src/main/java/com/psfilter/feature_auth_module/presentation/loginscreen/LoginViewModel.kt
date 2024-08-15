@@ -2,6 +2,7 @@ package com.psfilter.feature_auth_module.presentation.loginscreen
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,6 +30,9 @@ class LoginViewModel(
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+    fun setErrorMessage(message: String?) {
+        _errorMessage.value = message
+    }
 
     fun emailPasswordSignIn(email: String, password: String) {
         _logInResultState.value = RequestResult.Loading
@@ -67,6 +71,7 @@ class LoginViewModel(
             DataError.Firebase.UNEXPECTED_ERROR -> "Unexpected Error"
         }
         _errorMessage.value = message
+
     }
 
     fun getGoogleSignUpIntent(): Intent {

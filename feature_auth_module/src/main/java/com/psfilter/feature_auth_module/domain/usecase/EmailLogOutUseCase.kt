@@ -1,14 +1,17 @@
 package com.psfilter.feature_auth_module.domain.usecase
 
+import com.google.firebase.auth.FirebaseUser
 import com.psfilter.feature_auth_module.domain.repository.EmailAuthRepository
-import com.psfilter.feature_auth_module.domain.repository.GoogleAuthRepository
 
 class EmailLogOutUseCase(
-    private val emailAuthRepository: EmailAuthRepository,
-    private val googleAuthRepository: GoogleAuthRepository
+    private val emailAuthRepository: EmailAuthRepository
 ) {
     suspend fun logOut() {
         emailAuthRepository.logOut()
-        googleAuthRepository.logOutWithGoogle()
     }
+
+    suspend fun getCurrentUserProvider(): List<String>?{
+       return emailAuthRepository.getAuthProviders()
+    }
+
 }

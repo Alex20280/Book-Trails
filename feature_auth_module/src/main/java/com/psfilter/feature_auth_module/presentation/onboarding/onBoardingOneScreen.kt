@@ -32,11 +32,11 @@ fun OnBoardingOneScreen(
 ) {
     val viewModel: OnboardingViewModel = koinViewModel()
     val hasSeenOnboarding by viewModel.hasSeenOnboarding.collectAsState()
-    val isUserSignedInWithEmail by viewModel.isUserSignedInWithEmail.collectAsState()
+    val isUserSignedIn by viewModel.isUserSignedIn.collectAsState()
 
     LaunchedEffect(hasSeenOnboarding) {
         if (hasSeenOnboarding == true) {
-            if(isUserSignedInWithEmail){
+            if(isUserSignedIn){
                 navigateToHomeScreen.invoke()
             } else {
                 navigateToLoginScreen.invoke()

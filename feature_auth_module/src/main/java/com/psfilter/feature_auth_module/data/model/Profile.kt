@@ -9,9 +9,9 @@ data class Profile(
     val id: String = "",
     val email: String = "",
     val photoUrl: String = "",
-    val displayName: String = "",
-    val registeredSince: Date = Date(),
-    val username: String? = "",
+    val displayName: String? = "",
+    val lastLogIn: Date? = null,
+    val registeredSince: Date? = null,
     val userState: String = UserState.NONE.value,
     val signInModel: String = SignInModel.EMAIL.value
 ) : Parcelable
