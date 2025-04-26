@@ -1,15 +1,19 @@
-package com.psfilter.feature_auth_module.ui.onboarding
+package com.psfilter.feature_auth_module.ui.presentation.onboarding
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.booktrails.core_module.UserPreferenceManager
+import com.psfilter.feature_auth_module.ui.data.repository.AuthRepositoryImpl
+import com.psfilter.feature_auth_module.ui.domain.AuthRepository
+import com.psfilter.feature_auth_module.ui.domain.usecase.GetNotificationUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class OnboardingViewModel (
-    private val userPreferenceManager: UserPreferenceManager
+    private val userPreferenceManager: UserPreferenceManager,
+    private val getNotificationUseCase: GetNotificationUseCase
 ) : ViewModel() {
 
     private val _hasSeenOnboarding = MutableStateFlow<Boolean?>(null)
@@ -17,8 +21,11 @@ class OnboardingViewModel (
 
     init {
         viewModelScope.launch {
-            _hasSeenOnboarding.value = userPreferenceManager.isOnboardingSeen()
+            getNotificationUseCase.getNotification()
         }
+/*        viewModelScope.launch {
+            _hasSeenOnboarding.value = userPreferenceManager.isOnboardingSeen()
+        }*/
     }
 
     fun setOnboardingSeen() {

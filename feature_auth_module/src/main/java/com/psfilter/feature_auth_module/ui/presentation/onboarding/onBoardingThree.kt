@@ -1,4 +1,4 @@
-package com.psfilter.feature_auth_module.ui.onboarding
+package com.psfilter.feature_auth_module.ui.presentation.onboarding
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

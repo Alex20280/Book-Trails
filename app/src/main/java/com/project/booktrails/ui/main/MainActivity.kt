@@ -42,11 +42,11 @@ import com.project.booktrails.ui.theme.BookTrailsTheme
 import com.project.feature_auth_module.ui.ForgetPasswordScreen
 import com.project.feature_auth_module.ui.LoginScreen
 import com.project.feature_auth_module.ui.SignUpScreen
-import com.psfilter.feature_auth_module.ui.onboarding.OnBoardingOneScreen
-import com.psfilter.feature_auth_module.ui.onboarding.OnBoardingThreeScreen
-import com.psfilter.feature_auth_module.ui.onboarding.OnBoardingTwoScreen
-import com.psfilter.feature_auth_module.ui.policy.PrivacyPolicyScreen
-import com.psfilter.feature_auth_module.ui.tos.TosScreen
+import com.psfilter.feature_auth_module.ui.presentation.onboarding.OnBoardingOneScreen
+import com.psfilter.feature_auth_module.ui.presentation.onboarding.OnBoardingThreeScreen
+import com.psfilter.feature_auth_module.ui.presentation.onboarding.OnBoardingTwoScreen
+import com.psfilter.feature_auth_module.ui.presentation.policy.PrivacyPolicyScreen
+import com.psfilter.feature_auth_module.ui.presentation.tos.TosScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

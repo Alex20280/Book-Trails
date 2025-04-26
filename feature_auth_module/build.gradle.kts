@@ -38,6 +38,7 @@ dependencies {
 
     implementation (project(":ui_module"))
     implementation (project(":core_module"))
+    implementation(project(":network_module"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -63,6 +63,7 @@ dependencies {
     implementation (project(":feature_bestseller_books_module"))
     implementation (project(":feature_profile_module"))
     implementation(project(":feature_book_management_module"))
+    implementation(project(":network_module"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -103,5 +104,10 @@ dependencies {
     //Coroutines
     implementation (libs.kotlinx.coroutines.core)
 
+    //Network
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.gson)
+    implementation(libs.okhttp.logging)
 
 }
