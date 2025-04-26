@@ -23,9 +23,11 @@ sealed class NavigationScreens(val icon: Int, val route: String) {
     @Serializable
     data object HomeScreen: NavigationScreens(com.project.booktrails.R.drawable.book_icon, "home")
     @Serializable
-    data object BestSellerScreen: NavigationScreens( com.project.booktrails.R.drawable.star_icon, "bestseller")
+    data object BestSellerScreen: NavigationScreens( com.project.booktrails.R.drawable.bestseller_icon, "bestseller")
     @Serializable
-    data object ProfileScreen: NavigationScreens(com.project.booktrails.R.drawable.profile_icon, "profile")
+    data object Statistics: NavigationScreens(com.project.booktrails.R.drawable.statisticcs_icon, "profile")
+    @Serializable
+    data object BadgesScreen: NavigationScreens(com.project.booktrails.R.drawable.badges_icon, "badges")
     @Serializable
     data object SettingsScreen: NavigationScreens(0, "")
     @Serializable

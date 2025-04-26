@@ -26,6 +26,7 @@ fun BottomNavigationSection(
     bottomNavigationScreens: List<NavigationScreens>,
     navigateToHomeScreen: () -> Unit,
     navigateToBestsellerScreen: () -> Unit,
+    navigateToBadgesScreen: () -> Unit,
     navigateToProfileScreen: () -> Unit,
     currentRoute: String?
 ) {
@@ -33,17 +34,19 @@ fun BottomNavigationSection(
     val paddingValues = WindowInsets.navigationBars.asPaddingValues()
     val homeScreen = NavigationScreens.HomeScreen::class.qualifiedName.toString()
     val bestSellerScreen = NavigationScreens.BestSellerScreen::class.qualifiedName.toString()
-    val profileScreen = NavigationScreens.ProfileScreen::class.qualifiedName.toString()
+    val badgesScreen = NavigationScreens.BadgesScreen::class.qualifiedName.toString()
+    val profileScreen = NavigationScreens.Statistics::class.qualifiedName.toString()
 
     BottomNavigation(
-        modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
+        modifier = Modifier
+            .padding(bottom = paddingValues.calculateBottomPadding())
     ) {
 
         BottomNavigationItem(
             modifier = Modifier
-                .background(colorResource(id = com.booktrails.ui_module.R.color.white)),
-            unselectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.black),
-            selectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.blue),
+                .background(colorResource(id = com.booktrails.ui_module.R.color.dark_brown)),
+            unselectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.light_brown),
+            selectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.cream),
             icon = {
                 Column(
                     modifier = Modifier
@@ -55,7 +58,7 @@ fun BottomNavigationSection(
                             .align(Alignment.CenterHorizontally),
                         painter = painterResource(id = bottomNavigationScreens[0].icon),
                         colorFilter = if (currentRoute == homeScreen) ColorFilter.tint(
-                            colorResource(id = com.booktrails.ui_module.R.color.blue)
+                            colorResource(id = com.booktrails.ui_module.R.color.white)
                         ) else null,
                         contentDescription = stringResource(R.string.home_page)
                     )
@@ -63,9 +66,9 @@ fun BottomNavigationSection(
                         text = "Books",
                         style = MaterialTheme.typography.bodyMedium,
                         color = if (currentRoute == homeScreen) {
-                            colorResource(id = com.booktrails.ui_module.R.color.blue)
+                            colorResource(id = com.booktrails.ui_module.R.color.cream)
                         } else {
-                            colorResource(id = com.booktrails.ui_module.R.color.light_grey)
+                            colorResource(id = com.booktrails.ui_module.R.color.light_brown)
                         },
                         modifier = Modifier
                             .padding(top = 5.dp)
@@ -82,9 +85,9 @@ fun BottomNavigationSection(
         BottomNavigationItem(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorResource(id = com.booktrails.ui_module.R.color.white)),
-            unselectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.black),
-            selectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.blue),
+                .background(colorResource(id = com.booktrails.ui_module.R.color.dark_brown)),
+            unselectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.light_brown),
+            selectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.cream),
             icon = {
                 Column(
                     modifier = Modifier
@@ -96,7 +99,7 @@ fun BottomNavigationSection(
                             .align(Alignment.CenterHorizontally),
                         painter = painterResource(id = bottomNavigationScreens[1].icon),
                         colorFilter = if (currentRoute == bestSellerScreen) ColorFilter.tint(
-                            colorResource(id = com.booktrails.ui_module.R.color.blue)
+                            colorResource(id = com.booktrails.ui_module.R.color.white)
                         ) else null,
                         contentDescription = stringResource(R.string.bestseller_screen)
                     )
@@ -104,9 +107,9 @@ fun BottomNavigationSection(
                         text = "Bestseller",
                         style = MaterialTheme.typography.bodyMedium,
                         color = if (currentRoute == bestSellerScreen) {
-                            colorResource(id = com.booktrails.ui_module.R.color.blue)
+                            colorResource(id = com.booktrails.ui_module.R.color.cream)
                         } else {
-                            colorResource(id = com.booktrails.ui_module.R.color.light_grey)
+                            colorResource(id = com.booktrails.ui_module.R.color.light_brown)
                         },
                         modifier = Modifier
                             .padding(top = 5.dp)
@@ -123,9 +126,9 @@ fun BottomNavigationSection(
         BottomNavigationItem(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorResource(id = com.booktrails.ui_module.R.color.white)),
-            unselectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.light_grey),
-            selectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.blue),
+                .background(colorResource(id = com.booktrails.ui_module.R.color.dark_brown)),
+            unselectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.light_brown),
+            selectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.cream),
             icon = {
                 Column(
                     modifier = Modifier
@@ -136,18 +139,59 @@ fun BottomNavigationSection(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally),
                         painter = painterResource(id = bottomNavigationScreens[2].icon),
-                        colorFilter = if (currentRoute == profileScreen) ColorFilter.tint(
-                            colorResource(id = com.booktrails.ui_module.R.color.blue)
+                        colorFilter = if (currentRoute == badgesScreen) ColorFilter.tint(
+                            colorResource(id = com.booktrails.ui_module.R.color.white)
                         ) else null,
-                        contentDescription = stringResource(R.string.profile_screen)
+                        contentDescription = stringResource(R.string.badges_screen)
                     )
                     androidx.compose.material3.Text(
-                        text = "Profile",
+                        text = "Badges",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (currentRoute == badgesScreen) {
+                            colorResource(id = com.booktrails.ui_module.R.color.cream)
+                        } else {
+                            colorResource(id = com.booktrails.ui_module.R.color.light_brown)
+                        },
+                        modifier = Modifier
+                            .padding(top = 5.dp)
+                            .align(Alignment.CenterHorizontally),
+                    )
+                }
+            },
+            selected = currentRoute == badgesScreen,
+            onClick = {
+                navigateToBadgesScreen.invoke()
+            }
+        )
+
+        BottomNavigationItem(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colorResource(id = com.booktrails.ui_module.R.color.dark_brown)),
+            unselectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.light_brown),
+            selectedContentColor = colorResource(id = com.booktrails.ui_module.R.color.cream),
+            icon = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterVertically),
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally),
+                        painter = painterResource(id = bottomNavigationScreens[3].icon),
+                        colorFilter = if (currentRoute == profileScreen) ColorFilter.tint(
+                            colorResource(id = com.booktrails.ui_module.R.color.white)
+                        ) else null,
+                        contentDescription = stringResource(R.string.statistics_screen)
+                    )
+                    androidx.compose.material3.Text(
+                        text = "Statistics",
                         style = MaterialTheme.typography.bodyMedium,
                         color = if (currentRoute == profileScreen) {
-                            colorResource(id = com.booktrails.ui_module.R.color.blue)
+                            colorResource(id = com.booktrails.ui_module.R.color.cream)
                         } else {
-                            colorResource(id = com.booktrails.ui_module.R.color.light_grey)
+                            colorResource(id = com.booktrails.ui_module.R.color.light_brown)
                         },
                         modifier = Modifier
                             .padding(top = 5.dp)

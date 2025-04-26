@@ -22,16 +22,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TopBarBackground(){
+fun TopBarBackground(){ //TODO remove
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Image(
+/*        Image(
             painter = painterResource(id = R.drawable.bg_image),
             contentDescription = null,
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillBounds
-        )
+        )*/
 
     }
 }
