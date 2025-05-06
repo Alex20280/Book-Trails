@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,352 +60,361 @@ class MainActivity() : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-       installSplashScreen().setKeepOnScreenCondition {
+        setSplashScreen()
+
+        enableEdgeToEdge()
+
+        setContent {
+            BookTrailsApp()
+        }
+
+    }
+
+    private fun setSplashScreen() {
+        installSplashScreen().setKeepOnScreenCondition {
             keepSplashScreen
             holdSplashScreen()
             keepSplashScreen
         }
+    }
 
-        enableEdgeToEdge()
-        setContent {
+    @Composable
+    fun BookTrailsApp(){
+        val navController = rememberNavController()
+        var topBarVisible by remember { mutableStateOf(false) }
+        var bottomBarVisible by remember { mutableStateOf(false) }
 
-            val navController = rememberNavController()
-            var topBarVisible by remember { mutableStateOf(false) }
-            var bottomBarVisible by remember { mutableStateOf(false) }
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
 
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
+        val bottomNavigationScreens = listOf(
+            NavigationScreens.HomeScreen,
+            NavigationScreens.BestSellerScreen,
+            NavigationScreens.BadgesScreen,
+            NavigationScreens.Statistics,
+        )
 
-            val bottomNavigationScreens = listOf(
-                NavigationScreens.HomeScreen,
-                NavigationScreens.BestSellerScreen,
-                NavigationScreens.BadgesScreen,
-                NavigationScreens.Statistics,
-            )
+        BookTrailsTheme {
 
-            BookTrailsTheme {
-
-                Scaffold(modifier = Modifier.fillMaxSize(),
-                    topBar = {
-                        if (topBarVisible) {
-                            ToolBar(stringResource(R.string.book_trails))
-                        }
-                    },
-                    bottomBar = {
-                        if (bottomBarVisible) {
-                            BottomNavigationSection(
-                                bottomNavigationScreens = bottomNavigationScreens,
-                                navigateToHomeScreen = { navController.navigate(NavigationScreens.HomeScreen) },
-                                navigateToBestsellerScreen = {
-                                    navController.navigate(
-                                        NavigationScreens.BestSellerScreen
-                                    )
-                                },
-                                navigateToBadgesScreen = { navController.navigate(NavigationScreens.BadgesScreen) },
-                                navigateToProfileScreen = { navController.navigate(NavigationScreens.Statistics) },
-                                currentRoute = currentRoute
-                            )
-                        }
-                    }) { innerPadding ->
+            Scaffold(modifier = Modifier.fillMaxSize(),
+                topBar = {
+                    if (topBarVisible) {
+                        ToolBar(stringResource(R.string.book_trails))
+                    }
+                },
+                bottomBar = {
+                    if (bottomBarVisible) {
+                        BottomNavigationSection(
+                            bottomNavigationScreens = bottomNavigationScreens,
+                            navigateToHomeScreen = { navController.navigate(NavigationScreens.HomeScreen) },
+                            navigateToBestsellerScreen = {
+                                navController.navigate(
+                                    NavigationScreens.BestSellerScreen
+                                )
+                            },
+                            navigateToBadgesScreen = { navController.navigate(NavigationScreens.BadgesScreen) },
+                            navigateToProfileScreen = { navController.navigate(NavigationScreens.Statistics) },
+                            currentRoute = currentRoute
+                        )
+                    }
+                }) { innerPadding ->
 
 
-                    NavHost(
-                        navController = navController,
-                        startDestination = NavigationScreens.OnBoardingOneScreen //NavigationScreens.LoginScreen
+                NavHost(
+                    navController = navController,
+                    startDestination = NavigationScreens.OnBoardingOneScreen //NavigationScreens.LoginScreen
+                ) {
+                    composable<NavigationScreens.LoginScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
                     ) {
-                        composable<NavigationScreens.LoginScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ) {
-                            LoginScreen(
-                                paddingValues = innerPadding,
-                                onClickForgetPassword = { navController.navigate(NavigationScreens.ForgetPasswordScreen) },
-                                onRegisterClick = { navController.navigate(NavigationScreens.SignUpScreen) },
-                                onSignInClick = { navController.navigate(NavigationScreens.HomeScreen){
-                                    popUpTo(NavigationScreens.LoginScreen) { inclusive = true }
-                                } })
-                        }
-                        composable<NavigationScreens.TosScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            TosScreen(
-                                paddingValues = innerPadding,
-                                onClickBackButton = { navController.navigateUp() },
-                            )
-                        }
-                        composable<NavigationScreens.OnBoardingOneScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            OnBoardingOneScreen(
-                                paddingValues = innerPadding,
-                                onNextClick = {navController.navigate(NavigationScreens.OnBoardingTwoScreen){
-                                    popUpTo(NavigationScreens.OnBoardingOneScreen) { inclusive = true }
-                                } },
-                                navigateToLoginScreen = {navController.navigate(NavigationScreens.LoginScreen){
-                                    popUpTo(NavigationScreens.OnBoardingOneScreen) { inclusive = true }
-                                } }
-                            )
-                        }
-                        composable<NavigationScreens.OnBoardingTwoScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            OnBoardingTwoScreen(
-                                paddingValues = innerPadding,
-                                onNextClick = {navController.navigate(NavigationScreens.OnBoardingThreeScreen){
-                                    popUpTo(NavigationScreens.OnBoardingTwoScreen) { inclusive = true }
-                                } },
-                            )
-                        }
-                        composable<NavigationScreens.OnBoardingThreeScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            OnBoardingThreeScreen(
-                                paddingValues = innerPadding,
-                                onNextClick = {navController.navigate(NavigationScreens.LoginScreen){
-                                    popUpTo(NavigationScreens.OnBoardingThreeScreen) { inclusive = true }
-                                } },
-
-                            )
-                        }
-                        composable<NavigationScreens.PrivacyPolicyScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            PrivacyPolicyScreen(
-                                paddingValues = innerPadding,
-                                onClickBackButton = { navController.navigateUp() },
-                            )
-                        }
-                        composable<NavigationScreens.HomeScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ) {
-                            HomeScreen(
-                                navigateToDetailsScreen = {navController.navigate(NavigationScreens.BookDetailsScreen(it))},
-                                navigateToAddBookScreen = {navController.navigate(NavigationScreens.AddBookScreen)}
-                            )
-                        }
-
-                        composable<NavigationScreens.AddBookScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            AddBookScreen(
-                                navigateToIsbnScanScreen = {navController.navigate(NavigationScreens.ScanIsbnScreen)},
-                                navigateToManualAddScreen = {navController.navigate(NavigationScreens.ManualAddScreen)}
-                            )
-                        }
-                        composable<NavigationScreens.ScanIsbnScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            ScanIsbnScreen(navigateToManualScreen = {navController.navigate(NavigationScreens.ManualAddScreen)})
-                        }
-
-                        composable<NavigationScreens.ManualAddScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            ManualAddScreen(navigateToHomeScreen = {navController.navigate(NavigationScreens.HomeScreen){
-                                popUpTo(NavigationScreens.ManualAddScreen) { inclusive = true }
-                            }})
-                        }
-
-                        composable<NavigationScreens.BestSellerScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ) {
-                            BestsellerScreen(
-                                navigateToBestsellerDetailScreen = {
-                                    navController.navigate(
-                                        NavigationScreens.BestsellerDetailsScreen(it)
-                                    )
-                                }
-                            )
-                        }
-
-                        composable<NavigationScreens.BestsellerDetailsScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            val bestsellerIdArgs = it.toRoute<NavigationScreens.BestsellerDetailsScreen>()
-                            BestsellerDetailsScreen(bestsellerIdArgs = bestsellerIdArgs.id)
-                        }
-
-                        composable<NavigationScreens.Statistics> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            ProfileScreen(navigateToLogInScreen = {navController.navigate(NavigationScreens.LoginScreen){
-                                popUpTo(NavigationScreens.Statistics) { inclusive = true }
-                            }},
-                                navigateToSettingScreen = {navController.navigate(NavigationScreens.SettingsScreen)},
-                                navigateToContactDevScreen = {navController.navigate(NavigationScreens.ContactDeveloperScreen)}
-                            )
-                        }
-
-                        composable<NavigationScreens.BadgesScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            BadgesScreen()
-                            
-                        }
-
-                        composable<NavigationScreens.SettingsScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            SettingsScreen(
-                                paddingValues = innerPadding,
-                                onClickBackButton = { navController.navigateUp() },
-                            )
-                        }
-                        composable<NavigationScreens.ContactDeveloperScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            ContactDeveloperScreen(
-                                paddingValues = innerPadding,
-                                onClickBackButton = { navController.navigateUp() },
-                            )
-                        }
-
-                        composable<NavigationScreens.BookDetailsScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            val idArgs = it.toRoute<NavigationScreens.BookDetailsScreen>()
-                            BookDetailsScreen(idArgs = idArgs.id,
-                                navigateToReadingTimerScreen = {navController.navigate(NavigationScreens.ReadingTimerScreen(it))}
-                            )
-                        }
-
-                        composable<NavigationScreens.ReadingTimerScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            val idArgs = it.toRoute<NavigationScreens.ReadingTimerScreen>()
-                            ReadingTimerScreen(idArgs = idArgs.id, navigateToCongratulationScreen = {
-                                navController.navigate(NavigationScreens.CongratulationScreen)
-                            })
-                        }
-
-                        composable<NavigationScreens.CongratulationScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            CongratulationScreen(navigateToHomeScreen = {navController.navigate(NavigationScreens.HomeScreen){
-                                popUpTo(NavigationScreens.CongratulationScreen) { inclusive = true }
+                        LoginScreen(
+                            paddingValues = innerPadding,
+                            onClickForgetPassword = { navController.navigate(NavigationScreens.ForgetPasswordScreen) },
+                            onRegisterClick = { navController.navigate(NavigationScreens.SignUpScreen) },
+                            onSignInClick = { navController.navigate(NavigationScreens.HomeScreen){
+                                popUpTo(NavigationScreens.LoginScreen) { inclusive = true }
                             } })
-                        }
+                    }
+                    composable<NavigationScreens.TosScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        TosScreen(
+                            paddingValues = innerPadding,
+                            onClickBackButton = { navController.navigateUp() },
+                        )
+                    }
+                    composable<NavigationScreens.OnBoardingOneScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        OnBoardingOneScreen(
+                            paddingValues = innerPadding,
+                            onNextClick = {navController.navigate(NavigationScreens.OnBoardingTwoScreen){
+                                popUpTo(NavigationScreens.OnBoardingOneScreen) { inclusive = true }
+                            } },
+                            navigateToLoginScreen = {navController.navigate(NavigationScreens.LoginScreen){
+                                popUpTo(NavigationScreens.OnBoardingOneScreen) { inclusive = true }
+                            } }
+                        )
+                    }
+                    composable<NavigationScreens.OnBoardingTwoScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        OnBoardingTwoScreen(
+                            paddingValues = innerPadding,
+                            onNextClick = {navController.navigate(NavigationScreens.OnBoardingThreeScreen){
+                                popUpTo(NavigationScreens.OnBoardingTwoScreen) { inclusive = true }
+                            } },
+                        )
+                    }
+                    composable<NavigationScreens.OnBoardingThreeScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        OnBoardingThreeScreen(
+                            paddingValues = innerPadding,
+                            onNextClick = {navController.navigate(NavigationScreens.LoginScreen){
+                                popUpTo(NavigationScreens.OnBoardingThreeScreen) { inclusive = true }
+                            } },
 
-                        composable<NavigationScreens.SignUpScreen>  (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            val context = LocalContext.current
-                            SignUpScreen(
-                                paddingValues = innerPadding,
-                                onClickBackButton = { navController.navigateUp() },
-                                onRegisterButtonClick = {}, //TODO implement registration
-                                onTosClick = {navController.navigate(NavigationScreens.TosScreen)},
-                                onPrivacyClick = {navController.navigate(NavigationScreens.PrivacyPolicyScreen)},
                             )
-                        }
+                    }
+                    composable<NavigationScreens.PrivacyPolicyScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        PrivacyPolicyScreen(
+                            paddingValues = innerPadding,
+                            onClickBackButton = { navController.navigateUp() },
+                        )
+                    }
+                    composable<NavigationScreens.HomeScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ) {
+                        HomeScreen(
+                            navigateToDetailsScreen = {navController.navigate(NavigationScreens.BookDetailsScreen(it))},
+                            navigateToAddBookScreen = {navController.navigate(NavigationScreens.AddBookScreen)}
+                        )
+                    }
 
-                        composable<NavigationScreens.ForgetPasswordScreen> (
-                            enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                            popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                            popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                        ){
-                            ForgetPasswordScreen(
-                                paddingValues = innerPadding,
-                                onClickBackButton = { navController.navigateUp() },
-                                onRestorePasswordClick = { }) //TODO Restore Password Click
-                        }
+                    composable<NavigationScreens.AddBookScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        AddBookScreen(
+                            navigateToIsbnScanScreen = {navController.navigate(NavigationScreens.ScanIsbnScreen)},
+                            navigateToManualAddScreen = {navController.navigate(NavigationScreens.ManualAddScreen)}
+                        )
+                    }
+                    composable<NavigationScreens.ScanIsbnScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        ScanIsbnScreen(navigateToManualScreen = {navController.navigate(NavigationScreens.ManualAddScreen)})
+                    }
 
-                        navController.addOnDestinationChangedListener { _, destination, _ ->
-                            bottomBarVisible = when (destination.route) {
-                                NavigationScreens.HomeScreen::class.qualifiedName.toString(),
-                                NavigationScreens.BestSellerScreen::class.qualifiedName.toString(),
-                                NavigationScreens.BadgesScreen::class.qualifiedName.toString(),
-                                NavigationScreens.Statistics::class.qualifiedName.toString() -> {
-                                    true
-                                }
+                    composable<NavigationScreens.ManualAddScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        ManualAddScreen(navigateToHomeScreen = {navController.navigate(NavigationScreens.HomeScreen){
+                            popUpTo(NavigationScreens.ManualAddScreen) { inclusive = true }
+                        }})
+                    }
 
-                                else -> {
-                                    false
-                                }
+                    composable<NavigationScreens.BestSellerScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ) {
+                        BestsellerScreen(
+                            navigateToBestsellerDetailScreen = {
+                                navController.navigate(
+                                    NavigationScreens.BestsellerDetailsScreen(it)
+                                )
                             }
+                        )
+                    }
 
-                            topBarVisible = when (destination.route) {
-                                NavigationScreens.HomeScreen::class.qualifiedName.toString(),
-                                NavigationScreens.BestSellerScreen::class.qualifiedName.toString(),
-                                NavigationScreens.BadgesScreen::class.qualifiedName.toString(),
-                                NavigationScreens.Statistics::class.qualifiedName.toString() -> {
-                                    true
-                                }
+                    composable<NavigationScreens.BestsellerDetailsScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        val bestsellerIdArgs = it.toRoute<NavigationScreens.BestsellerDetailsScreen>()
+                        BestsellerDetailsScreen(bestsellerIdArgs = bestsellerIdArgs.id)
+                    }
 
-                                else -> {
-                                    false
-                                }
-                            }
-                        }
+                    composable<NavigationScreens.Statistics> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        ProfileScreen(navigateToLogInScreen = {navController.navigate(NavigationScreens.LoginScreen){
+                            popUpTo(NavigationScreens.Statistics) { inclusive = true }
+                        }},
+                            navigateToSettingScreen = {navController.navigate(NavigationScreens.SettingsScreen)},
+                            navigateToContactDevScreen = {navController.navigate(NavigationScreens.ContactDeveloperScreen)}
+                        )
+                    }
+
+                    composable<NavigationScreens.BadgesScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        BadgesScreen()
 
                     }
-                }
 
+                    composable<NavigationScreens.SettingsScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        SettingsScreen(
+                            paddingValues = innerPadding,
+                            onClickBackButton = { navController.navigateUp() },
+                        )
+                    }
+                    composable<NavigationScreens.ContactDeveloperScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        ContactDeveloperScreen(
+                            paddingValues = innerPadding,
+                            onClickBackButton = { navController.navigateUp() },
+                        )
+                    }
+
+                    composable<NavigationScreens.BookDetailsScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        val idArgs = it.toRoute<NavigationScreens.BookDetailsScreen>()
+                        BookDetailsScreen(idArgs = idArgs.id,
+                            navigateToReadingTimerScreen = {navController.navigate(NavigationScreens.ReadingTimerScreen(it))}
+                        )
+                    }
+
+                    composable<NavigationScreens.ReadingTimerScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        val idArgs = it.toRoute<NavigationScreens.ReadingTimerScreen>()
+                        ReadingTimerScreen(idArgs = idArgs.id, navigateToCongratulationScreen = {
+                            navController.navigate(NavigationScreens.CongratulationScreen)
+                        })
+                    }
+
+                    composable<NavigationScreens.CongratulationScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        CongratulationScreen(navigateToHomeScreen = {navController.navigate(NavigationScreens.HomeScreen){
+                            popUpTo(NavigationScreens.CongratulationScreen) { inclusive = true }
+                        } })
+                    }
+
+                    composable<NavigationScreens.SignUpScreen>  (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        val context = LocalContext.current
+                        SignUpScreen(
+                            paddingValues = innerPadding,
+                            onClickBackButton = { navController.navigateUp() },
+                            onRegisterButtonClick = {}, //TODO implement registration
+                            onTosClick = {navController.navigate(NavigationScreens.TosScreen)},
+                            onPrivacyClick = {navController.navigate(NavigationScreens.PrivacyPolicyScreen)},
+                        )
+                    }
+
+                    composable<NavigationScreens.ForgetPasswordScreen> (
+                        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ){
+                        ForgetPasswordScreen(
+                            paddingValues = innerPadding,
+                            onClickBackButton = { navController.navigateUp() },
+                            onRestorePasswordClick = { }) //TODO Restore Password Click
+                    }
+
+                    navController.addOnDestinationChangedListener { _, destination, _ ->
+                        bottomBarVisible = when (destination.route) {
+                            NavigationScreens.HomeScreen::class.qualifiedName.toString(),
+                            NavigationScreens.BestSellerScreen::class.qualifiedName.toString(),
+                            NavigationScreens.BadgesScreen::class.qualifiedName.toString(),
+                            NavigationScreens.Statistics::class.qualifiedName.toString() -> {
+                                true
+                            }
+
+                            else -> {
+                                false
+                            }
+                        }
+
+                        topBarVisible = when (destination.route) {
+                            NavigationScreens.HomeScreen::class.qualifiedName.toString(),
+                            NavigationScreens.BestSellerScreen::class.qualifiedName.toString(),
+                            NavigationScreens.BadgesScreen::class.qualifiedName.toString(),
+                            NavigationScreens.Statistics::class.qualifiedName.toString() -> {
+                                true
+                            }
+
+                            else -> {
+                                false
+                            }
+                        }
+                    }
+
+                }
             }
 
         }
-
     }
+
     private fun holdSplashScreen(){
         lifecycleScope.launch {
             delay(1000)
