@@ -4,6 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class NavigationScreens(val icon: Int, val route: String) {
+
+    @Serializable
+    data object SplashScreen: NavigationScreens(0, "")
     @Serializable
     data object SignUpScreen: NavigationScreens(0, "")
     @Serializable
