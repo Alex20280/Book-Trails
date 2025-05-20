@@ -105,13 +105,23 @@ fun LoginScreenUI(
                 onValueChange = { loginText.value = it },
                 label = { Text(stringResource(R.string.login)) },
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
+                colors = TextFieldDefaults.colors(
+                    //setting the text field background when it is focused
+                    focusedLabelColor = colorResource(id = R.color.light_grey),
+
+                    //setting the text field background when it is unfocused or initial state
+                    unfocusedLabelColor = colorResource(id = R.color.light_grey),
+
+                    //setting the text field background when it is disabled
+                    focusedTextColor = colorResource(id = R.color.black),
+                )
+/*                colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedLabelColor = colorResource(id = R.color.light_grey),
                     unfocusedLabelColor = colorResource(id = R.color.light_grey),
                     focusedBorderColor = colorResource(id = R.color.light_grey),
                     unfocusedBorderColor = colorResource(id = R.color.light_grey),
                     focusedTextColor = colorResource(id = R.color.black),
-                ),
+                ),*/
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -122,13 +132,23 @@ fun LoginScreenUI(
                 label = { Text(stringResource(R.string.password)) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
+                colors = TextFieldDefaults.colors(
+                    //setting the text field background when it is focused
+                    focusedLabelColor = colorResource(id = R.color.light_grey),
+
+                    //setting the text field background when it is unfocused or initial state
+                    unfocusedLabelColor = colorResource(id = R.color.light_grey),
+
+                    //setting the text field background when it is disabled
+                    focusedTextColor = colorResource(id = R.color.black),
+                )
+/*                colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedLabelColor = colorResource(id = R.color.light_grey),
                     unfocusedLabelColor = colorResource(id = R.color.light_grey),
                     focusedBorderColor = colorResource(id = R.color.light_grey),
                     unfocusedBorderColor = colorResource(id = R.color.light_grey),
                     focusedTextColor = colorResource(id = R.color.black),
-                )
+                )*/
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -225,15 +245,6 @@ fun LoginScreenUI(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Image(
-                    painter = painterResource(id = R.drawable.fb_icon),
-                    contentDescription = stringResource(R.string.facebook_icon),
-                    modifier = Modifier
-                        .size(42.dp)
-                        .clickable {
-                            if (!isLoading) onFaceBookSignInClick.invoke()
-                        }
-                )
             }
         }
 

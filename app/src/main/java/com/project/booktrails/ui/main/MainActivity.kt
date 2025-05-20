@@ -1,12 +1,15 @@
 package com.project.booktrails.ui.main
 
+import android.graphics.drawable.AnimationDrawable
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,10 +71,17 @@ class MainActivity() : ComponentActivity() {
             BookTrailsApp()
         }
 
+        println(isInstance<String>("Hello")) // true
+        println(isInstance<String>(1))    // false
+
+    }
+    inline fun <reified T> isInstance(value: Any): Boolean {
+        return value is T
     }
 
+
     private fun setSplashScreen() {
-        installSplashScreen().setKeepOnScreenCondition {
+       installSplashScreen().setKeepOnScreenCondition {
             keepSplashScreen
             holdSplashScreen()
             keepSplashScreen
@@ -122,7 +132,7 @@ class MainActivity() : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = NavigationScreens.OnBoardingOneScreen //NavigationScreens.LoginScreen
+                    startDestination = NavigationScreens.OnBoardingOneScreen
                 ) {
                     composable<NavigationScreens.LoginScreen> (
                         enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },

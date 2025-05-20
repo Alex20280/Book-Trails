@@ -50,6 +50,9 @@ fun SignUpScreen(
     onPrivacyClick: () -> Unit,
 ) {
 
+/*    @JvmInline
+    value class Password(val raw: String)*/ //TODO: use for passwords
+
     SignUpScreenUI(
         paddingValues = paddingValues,
         onClickBackButton = onClickBackButton,
@@ -118,13 +121,24 @@ fun SignUpScreenUI(
             onValueChange = { loginText.value = it },
             label = { Text(stringResource(R.string.email)) },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = TextFieldDefaults.colors(
+                //setting the text field background when it is focused
+                focusedLabelColor = colorResource(id = R.color.light_grey),
+
+                //setting the text field background when it is unfocused or initial state
+                unfocusedLabelColor = colorResource(id = R.color.light_grey),
+
+                //setting the text field background when it is disabled
+                focusedTextColor = colorResource(id = R.color.black),
+            )
+
+            /*colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedLabelColor = colorResource(id = R.color.light_grey),
                 unfocusedLabelColor = colorResource(id = R.color.light_grey),
                 focusedBorderColor = colorResource(id = R.color.light_grey),
                 unfocusedBorderColor = colorResource(id = R.color.light_grey),
                 focusedTextColor = colorResource(id = R.color.black),
-            ),
+            )*/,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -135,13 +149,23 @@ fun SignUpScreenUI(
             label = { Text(stringResource(R.string.password)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = TextFieldDefaults.colors(
+                //setting the text field background when it is focused
+                focusedLabelColor = colorResource(id = R.color.light_grey),
+
+                //setting the text field background when it is unfocused or initial state
+                unfocusedLabelColor = colorResource(id = R.color.light_grey),
+
+                //setting the text field background when it is disabled
+                focusedTextColor = colorResource(id = R.color.black),
+            )
+/*            colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedLabelColor = colorResource(id = R.color.light_grey),
                 unfocusedLabelColor = colorResource(id = R.color.light_grey),
                 focusedBorderColor = colorResource(id = R.color.light_grey),
                 unfocusedBorderColor = colorResource(id = R.color.light_grey),
                 focusedTextColor = colorResource(id = R.color.black),
-            )
+            )*/
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -152,13 +176,23 @@ fun SignUpScreenUI(
             label = { Text(stringResource(R.string.confirm_password)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = TextFieldDefaults.colors(
+                //setting the text field background when it is focused
+                focusedLabelColor = colorResource(id = R.color.light_grey),
+
+                //setting the text field background when it is unfocused or initial state
+                unfocusedLabelColor = colorResource(id = R.color.light_grey),
+
+                //setting the text field background when it is disabled
+                focusedTextColor = colorResource(id = R.color.black),
+            )
+/*            colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedLabelColor = colorResource(id = R.color.light_grey),
                 unfocusedLabelColor = colorResource(id = R.color.light_grey),
                 focusedBorderColor = colorResource(id = R.color.light_grey),
                 unfocusedBorderColor = colorResource(id = R.color.light_grey),
                 focusedTextColor = colorResource(id = R.color.black),
-            )
+            )*/
         )
 
         Spacer(modifier = Modifier.height(8.dp))

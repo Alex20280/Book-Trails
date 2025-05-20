@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp.library) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     //id("org.sonarqube") version "5.1.0.4882"
+    alias(libs.plugins.compose.compiler) apply false
 
 }
 

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp.library)
+    alias(libs.plugins.compose.compiler)
 }
 /*plugins {
     `android-library`
@@ -10,11 +11,10 @@ plugins {
 
 android {
     namespace = "com.project.feature_auth_module"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 34
     }
 
     compileOptions {
@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.foundation.layout.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

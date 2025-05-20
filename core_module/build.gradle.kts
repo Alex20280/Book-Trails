@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     //alias(libs.plugins.ksp.library)
+    alias(libs.plugins.compose.compiler)
 }
 /*plugins {
     `android-library`
@@ -10,11 +11,10 @@ plugins {
 
 android {
     namespace = "com.booktrails.core_module"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 34
     }
 
     compileOptions {

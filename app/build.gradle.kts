@@ -5,16 +5,16 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 /*    id("com.android.application")
     id("org.jetbrains.kotlin.android")*/
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.project.booktrails"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.project.booktrails"
         minSdk = 24
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

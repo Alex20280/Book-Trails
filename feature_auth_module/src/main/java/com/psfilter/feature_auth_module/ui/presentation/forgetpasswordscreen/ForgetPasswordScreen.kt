@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -104,13 +102,24 @@ fun ForgetPasswordScreenUI(
             onValueChange = { emailText.value = it },
             label = { Text(stringResource(R.string.email)) },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = TextFieldDefaults.colors(
+                //setting the text field background when it is focused
+                focusedLabelColor = colorResource(id = R.color.light_grey),
+
+                //setting the text field background when it is unfocused or initial state
+                unfocusedLabelColor = colorResource(id = R.color.light_grey),
+
+                //setting the text field background when it is disabled
+                focusedTextColor = colorResource(id = R.color.black),
+
+            )
+/*            colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedLabelColor = colorResource(id = R.color.light_grey),
                 unfocusedLabelColor = colorResource(id = R.color.light_grey),
                 focusedBorderColor = colorResource(id = R.color.light_grey),
                 unfocusedBorderColor = colorResource(id = R.color.light_grey),
                 focusedTextColor = colorResource(id = R.color.black),
-            ),
+            ),*/
         )
 
         Spacer(modifier = Modifier.height(8.dp))
