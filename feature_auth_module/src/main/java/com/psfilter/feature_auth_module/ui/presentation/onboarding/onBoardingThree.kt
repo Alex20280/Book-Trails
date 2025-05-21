@@ -1,11 +1,15 @@
 package com.psfilter.feature_auth_module.ui.presentation.onboarding
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -17,8 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
@@ -29,14 +38,12 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun OnBoardingThreeScreen(
-    paddingValues: PaddingValues,
     onNextClick: () -> Unit,
 ) {
 
     val viewModel: OnboardingViewModel = koinViewModel()
 
     OnBoardingThreeScreenUI(
-        paddingValues = paddingValues,
         onNextClick = {
             onNextClick.invoke()
             viewModel.setOnboardingSeen()
@@ -46,43 +53,35 @@ fun OnBoardingThreeScreen(
 
 @Composable
 fun OnBoardingThreeScreenUI(
-    paddingValues: PaddingValues,
     onNextClick: () -> Unit
 ) {
-    TopBarBackground()
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = paddingValues.calculateBottomPadding(),
-                top = paddingValues.calculateTopPadding()
-            )
+            .background(color = colorResource(R.color.light_cream))
+            .padding(start = 16.dp, end = 16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopStart),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = stringResource(R.string.onboardingthree_screen),
-                style = MaterialTheme.typography.headlineLarge,
-                color = colorResource(id = R.color.black),
-                modifier = Modifier.padding(top = 16.dp, start = 16.dp),
-            )
-        }
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp)
-        ) {
-            SubmitButton(text = "Next", onClick = onNextClick)
-        }
+        Text(
+            text = stringResource(com.project.feature_auth_module.R.string.add_your_books_easy_by_scanning_book_isbn_code),
+            fontFamily = FontFamily(Font(R.font.roboto_bold)),
+            style = MaterialTheme.typography.headlineLarge,
+            color = colorResource(id = R.color.dark_brown),
+            textAlign = TextAlign.Center
+        )
+
+        Image(
+            painter = painterResource(id = com.project.feature_auth_module.R.drawable.onboarding_three),
+            contentDescription = null,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SubmitButton(text = "Next", onClick = onNextClick)
     }
 
 }

@@ -1,38 +1,107 @@
 package com.booktrails.ui_module
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Icon
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun SubmitButton(
     text: String,
     onClick: () -> Unit
 ) {
-    Button(
-        onClick = { onClick.invoke() },
+    //var isPressed by remember { mutableStateOf(false) }
+    val antiqueRose = colorResource(id = R.color.antique_rose)
+    val darkBrown = colorResource(id = R.color.dark_brown)
+    val offsetX by animateDpAsState(
+        targetValue =  0.dp,
+        animationSpec = tween(durationMillis = 200)
+    )
+    val density = LocalDensity.current
+    val offsetPx = with(density) { IntOffset(x = offsetX.roundToPx(), y = 0) }
+
+    Box(
         modifier = Modifier
-            .padding(top = 5.dp, bottom = 5.dp)
-            .fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(id = com.booktrails.ui_module.R.color.blue),
-            contentColor = colorResource(id = com.booktrails.ui_module.R.color.white),
-        ),
-        shape = RoundedCornerShape(8.dp)
+            .width(120.dp)
+            .height(42.dp)
+            .clickable {
+                //isPressed = true
+                Log.d("MyClick", "myClick")
+                onClick.invoke()
+                //isPressed = false
+            }
+            .background(antiqueRose, RoundedCornerShape(24.dp)),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(vertical = 10.dp)
-        )
+        Box(
+            modifier = Modifier
+                .width(116.dp)
+                .height(40.dp)
+                .background(antiqueRose, RoundedCornerShape(20.dp))
+                .offset { offsetPx }
+        ) {
+            Text(
+                text = text,
+                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.White
+                ),
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 26.dp)
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .offset(x = 0.dp)
+                    .size(40.dp)
+                    .background(darkBrown, RoundedCornerShape(50)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.arrow_forward),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        }
     }
 }

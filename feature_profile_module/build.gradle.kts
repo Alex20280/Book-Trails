@@ -47,5 +47,5 @@ dependencies {
 
     //Compose
     implementation(libs.androidx.compose.ui.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.ui.tooling.preview)
 }

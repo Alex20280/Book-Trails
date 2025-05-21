@@ -71,7 +71,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -81,7 +81,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.androidx.material)
-    implementation (libs.ui.tooling.preview)
 
     //Koin
     implementation (libs.koin.android)
@@ -91,7 +90,7 @@ dependencies {
     //Compose navigation
     implementation (libs.androidx.navigation.compose)
     implementation (libs.accompanist.navigation.animation)
-    implementation(libs.navigation.compose)
+    //implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
     //Splash screen

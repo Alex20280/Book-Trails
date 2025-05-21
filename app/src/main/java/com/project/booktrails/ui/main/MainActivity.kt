@@ -119,10 +119,59 @@ fun BookTrailsApp() {
                         paddingValues = innerPadding,
                         onAnimationFinished = {
                             navController.navigate(NavigationScreens.OnBoardingOneScreen) {
+                                popUpTo(NavigationScreens.SplashScreen) { inclusive = true }
                             }
                         }
                     )
                 }
+
+                composable<NavigationScreens.OnBoardingOneScreen>(
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                ) {
+                    OnBoardingOneScreen(
+                        onNextClick = {
+                            navController.navigate(NavigationScreens.OnBoardingTwoScreen) {
+                            }
+                        },
+                        navigateToLoginScreen = {
+                            navController.navigate(NavigationScreens.LoginScreen) {
+                                popUpTo(navController.graph.id) { inclusive = false }
+                            }
+                        }
+                    )
+                }
+                composable<NavigationScreens.OnBoardingTwoScreen>(
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                ) {
+                    OnBoardingTwoScreen(
+                        onNextClick = {
+                            navController.navigate(NavigationScreens.OnBoardingThreeScreen) {
+                            }
+                        },
+                    )
+                }
+                composable<NavigationScreens.OnBoardingThreeScreen>(
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                ) {
+                    OnBoardingThreeScreen(
+                        onNextClick = {
+                            navController.navigate(NavigationScreens.LoginScreen) {
+                                popUpTo(navController.graph.id) { inclusive = false }
+                            }
+                        },
+
+                        )
+                }
+
                 composable<NavigationScreens.LoginScreen>(
                     enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
                     exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
@@ -135,10 +184,11 @@ fun BookTrailsApp() {
                         onRegisterClick = { navController.navigate(NavigationScreens.SignUpScreen) },
                         onSignInClick = {
                             navController.navigate(NavigationScreens.HomeScreen) {
-                                popUpTo(NavigationScreens.LoginScreen) { inclusive = true }
+                                popUpTo(navController.graph.id) { inclusive = false }
                             }
                         })
                 }
+
                 composable<NavigationScreens.TosScreen>(
                     enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
                     exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
@@ -150,59 +200,7 @@ fun BookTrailsApp() {
                         onClickBackButton = { navController.navigateUp() },
                     )
                 }
-                composable<NavigationScreens.OnBoardingOneScreen>(
-                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                ) {
-                    OnBoardingOneScreen(
-                        paddingValues = innerPadding,
-                        onNextClick = {
-                            navController.navigate(NavigationScreens.OnBoardingTwoScreen) {
-                                popUpTo(NavigationScreens.OnBoardingOneScreen) { inclusive = true }
-                            }
-                        },
-                        navigateToLoginScreen = {
-                            navController.navigate(NavigationScreens.LoginScreen) {
-                                popUpTo(NavigationScreens.OnBoardingOneScreen) { inclusive = true }
-                            }
-                        }
-                    )
-                }
-                composable<NavigationScreens.OnBoardingTwoScreen>(
-                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                ) {
-                    OnBoardingTwoScreen(
-                        paddingValues = innerPadding,
-                        onNextClick = {
-                            navController.navigate(NavigationScreens.OnBoardingThreeScreen) {
-                                popUpTo(NavigationScreens.OnBoardingTwoScreen) { inclusive = true }
-                            }
-                        },
-                    )
-                }
-                composable<NavigationScreens.OnBoardingThreeScreen>(
-                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
-                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
-                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
-                ) {
-                    OnBoardingThreeScreen(
-                        paddingValues = innerPadding,
-                        onNextClick = {
-                            navController.navigate(NavigationScreens.LoginScreen) {
-                                popUpTo(NavigationScreens.OnBoardingThreeScreen) {
-                                    inclusive = true
-                                }
-                            }
-                        },
 
-                        )
-                }
                 composable<NavigationScreens.PrivacyPolicyScreen>(
                     enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
                     exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },

@@ -44,7 +44,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.foundation.layout.android)
@@ -54,7 +53,7 @@ dependencies {
 
     //Compose
     implementation(libs.androidx.compose.ui.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.ui.tooling.preview)
 
     //Koin
     implementation (libs.koin.android)

@@ -63,11 +63,9 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 
 androidx-compose-ui-ui-graphics = {group = "androidx.compose.ui", name= "ui-graphics"}
-androidx-compose-ui-tooling-preview = {group = "androidx.compose.ui", name= "ui-tooling-preview"}
 androidx-compose-ui-material3 = {group = "androidx.compose.material3", name= "material3"}
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
@@ -77,7 +75,6 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 sonarqube-gradle-plugin = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version.ref = "sonar" }
-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }

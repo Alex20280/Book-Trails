@@ -26,7 +26,7 @@ class OnboardingViewModel (
         viewModelScope.launch {
             userPreferenceManager.saveOnboardingStatus(true)
             _hasSeenOnboarding.value = true
-            Log.d("OnBoardingStatus", _hasSeenOnboarding.value.toString())
+            Log.d("OnBoardingStatus", "in Viewmodel: $_hasSeenOnboarding.value.toString()")
         }
     }
 }
