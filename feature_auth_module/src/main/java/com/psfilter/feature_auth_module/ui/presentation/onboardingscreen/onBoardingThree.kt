@@ -1,23 +1,16 @@
-package com.psfilter.feature_auth_module.ui.presentation.onboarding
+package com.psfilter.feature_auth_module.ui.presentation.onboardingscreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -27,12 +20,9 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
-import com.booktrails.ui_module.TopBarBackground
-import org.koin.androidx.compose.getViewModel
+import com.psfilter.feature_auth_module.ui.presentation.splashscreen.SplashScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -41,12 +31,12 @@ fun OnBoardingThreeScreen(
     onNextClick: () -> Unit,
 ) {
 
-    val viewModel: OnboardingViewModel = koinViewModel()
+    val viewModel: SplashScreenViewModel = koinViewModel()
 
     OnBoardingThreeScreenUI(
         onNextClick = {
-            onNextClick.invoke()
             viewModel.setOnboardingSeen()
+            onNextClick.invoke()
         }
     )
 }

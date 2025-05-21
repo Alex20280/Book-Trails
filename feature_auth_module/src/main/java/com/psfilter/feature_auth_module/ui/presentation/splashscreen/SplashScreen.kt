@@ -1,4 +1,4 @@
-package com.psfilter.feature_auth_module.ui.presentation.splash
+package com.psfilter.feature_auth_module.ui.presentation.splashscreen
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -15,17 +15,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.project.feature_auth_module.R
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun SplashScreen(
     paddingValues: PaddingValues,
-    onAnimationFinished: () -> Unit
+    navigateToOnBoardingScreen: () -> Unit,
+    navigateToLoginScreen: () -> Unit,
 ) {
     var currentImageIndex by remember { mutableIntStateOf(0) }
+
+    val viewModel: SplashScreenViewModel = koinViewModel()
+    val isFirstTimeAppRun by viewModel.isFirstTimeAppRun.collectAsState()
 
     val images = listOf(
         R.drawable.splash_one,
@@ -38,7 +42,11 @@ fun SplashScreen(
             currentImageIndex = index
             delay(1000L)
         }
-        onAnimationFinished()
+        if (isFirstTimeAppRun == true) {
+            navigateToLoginScreen.invoke()
+        } else {
+            navigateToOnBoardingScreen.invoke()
+        }
     }
 
     SplashScreenScreenUI(

@@ -1,4 +1,4 @@
-package com.psfilter.feature_auth_module.ui.presentation.tos
+package com.psfilter.feature_auth_module.ui.presentation.policyscreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,19 +21,19 @@ import com.booktrails.ui_module.R
 import com.booktrails.ui_module.TopBarBackground
 
 @Composable
-fun TosScreen(
+fun PrivacyPolicyScreen(
     paddingValues: PaddingValues,
     onClickBackButton: () -> Unit
 ) {
 
-    TosScreenUI(
+    PrivacyPolicyScreenUI(
         paddingValues = paddingValues,
         onClickBackButton = { onClickBackButton.invoke() }
     )
 }
 
 @Composable
-fun TosScreenUI(
+fun PrivacyPolicyScreenUI(
     paddingValues: PaddingValues,
     onClickBackButton: () -> Unit
 ) {
@@ -51,9 +51,9 @@ fun TosScreenUI(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-
         Image(
             modifier = Modifier
+                .padding(top = 16.dp)
                 .clickable { onClickBackButton.invoke() }
                 .size(24.dp),
             painter = painterResource(id = R.drawable.arrow_back_icon),
@@ -61,14 +61,14 @@ fun TosScreenUI(
         )
 
         Text(
-            text = stringResource(R.string.tos_screen),
+            text = stringResource(R.string.privacy_policy_screen),
             style = MaterialTheme.typography.headlineLarge,
             color = colorResource(id = R.color.black),
             modifier = Modifier.padding(top = 16.dp, start = 16.dp),
         )
-
         //TODO: Bug - when click twice go back to splash screen
 
     }
+
 
 }

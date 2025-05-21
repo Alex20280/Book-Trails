@@ -41,12 +41,12 @@ import com.project.booktrails.ui.theme.BookTrailsTheme
 import com.project.feature_auth_module.ui.ForgetPasswordScreen
 import com.project.feature_auth_module.ui.LoginScreen
 import com.project.feature_auth_module.ui.SignUpScreen
-import com.psfilter.feature_auth_module.ui.presentation.onboarding.OnBoardingOneScreen
-import com.psfilter.feature_auth_module.ui.presentation.onboarding.OnBoardingThreeScreen
-import com.psfilter.feature_auth_module.ui.presentation.onboarding.OnBoardingTwoScreen
-import com.psfilter.feature_auth_module.ui.presentation.policy.PrivacyPolicyScreen
-import com.psfilter.feature_auth_module.ui.presentation.splash.SplashScreen
-import com.psfilter.feature_auth_module.ui.presentation.tos.TosScreen
+import com.psfilter.feature_auth_module.ui.presentation.onboardingscreen.OnBoardingOneScreen
+import com.psfilter.feature_auth_module.ui.presentation.onboardingscreen.OnBoardingThreeScreen
+import com.psfilter.feature_auth_module.ui.presentation.onboardingscreen.OnBoardingTwoScreen
+import com.psfilter.feature_auth_module.ui.presentation.policyscreen.PrivacyPolicyScreen
+import com.psfilter.feature_auth_module.ui.presentation.splashscreen.SplashScreen
+import com.psfilter.feature_auth_module.ui.presentation.tosscreen.TosScreen
 
 class MainActivity() : ComponentActivity() {
 
@@ -117,8 +117,13 @@ fun BookTrailsApp() {
                 ) {
                     SplashScreen(
                         paddingValues = innerPadding,
-                        onAnimationFinished = {
+                        navigateToOnBoardingScreen = {
                             navController.navigate(NavigationScreens.OnBoardingOneScreen) {
+                                popUpTo(NavigationScreens.SplashScreen) { inclusive = true }
+                            }
+                        },
+                        navigateToLoginScreen = {
+                            navController.navigate(NavigationScreens.LoginScreen) {
                                 popUpTo(NavigationScreens.SplashScreen) { inclusive = true }
                             }
                         }

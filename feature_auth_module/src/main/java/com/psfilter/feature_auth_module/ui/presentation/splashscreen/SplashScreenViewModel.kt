@@ -1,6 +1,5 @@
-package com.psfilter.feature_auth_module.ui.presentation.onboarding
+package com.psfilter.feature_auth_module.ui.presentation.splashscreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.booktrails.core_module.UserPreferenceManager
@@ -8,25 +7,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class OnboardingViewModel (
+class SplashScreenViewModel(
     private val userPreferenceManager: UserPreferenceManager
 ) : ViewModel() {
 
-    private val _hasSeenOnboarding = MutableStateFlow<Boolean?>(null)
-    val hasSeenOnboarding: StateFlow<Boolean?> = _hasSeenOnboarding
+    private val _isFirstTimeAppRun = MutableStateFlow<Boolean?>(null)
+    val isFirstTimeAppRun: StateFlow<Boolean?> = _isFirstTimeAppRun
 
     init {
-
         viewModelScope.launch {
-            _hasSeenOnboarding.value = userPreferenceManager.isOnboardingSeen()
+            _isFirstTimeAppRun.value = userPreferenceManager.isOnboardingSeen()
         }
     }
 
     fun setOnboardingSeen() {
         viewModelScope.launch {
             userPreferenceManager.saveOnboardingStatus(true)
-            _hasSeenOnboarding.value = true
-            Log.d("OnBoardingStatus", "in Viewmodel: $_hasSeenOnboarding.value.toString()")
+            _isFirstTimeAppRun.value = true
         }
     }
 }
