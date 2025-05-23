@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.booktrails.ui_module.R
-import com.booktrails.ui_module.SubmitButton
+import com.booktrails.ui_module.NextButton
 
 @Composable
 fun OnBoardingTwoScreen(
@@ -78,7 +78,7 @@ fun OnBoardingTwoScreenUI(
             modifier = Modifier.padding(top = 16.dp)
         )
 
-        SubmitButton(text = "Next", onClick = onNextClick)
+        NextButton(text = "Next", onClick = onNextClick)
     }
 
 }

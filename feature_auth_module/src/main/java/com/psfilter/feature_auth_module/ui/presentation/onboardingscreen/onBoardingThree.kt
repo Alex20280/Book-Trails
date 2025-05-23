@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.booktrails.ui_module.R
-import com.booktrails.ui_module.SubmitButton
+import com.booktrails.ui_module.NextButton
 import com.psfilter.feature_auth_module.ui.presentation.splashscreen.SplashScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -71,7 +71,7 @@ fun OnBoardingThreeScreenUI(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SubmitButton(text = "Next", onClick = onNextClick)
+        NextButton(text = "Next", onClick = onNextClick)
     }
 
 }

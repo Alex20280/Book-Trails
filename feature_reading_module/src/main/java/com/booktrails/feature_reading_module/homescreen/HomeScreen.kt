@@ -52,6 +52,15 @@ fun HomeScreen(
     navigateToAddBookScreen: () -> Unit,
 ) {
 
+    /*
+  val compositionCongrats by rememberLottieComposition(
+      spec = LottieCompositionSpec.RawRes(com.booktrails.ui_module.R.raw.sign_up_animation)
+  )
+
+ LottieAnimation(
+      modifier = Modifier.align(Alignment.CenterHorizontally),
+      composition = compositionCongrats, iterations = 10)*/
+
     val context = LocalContext.current
     val bookList = listOf(
         Books(

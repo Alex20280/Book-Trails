@@ -3,6 +3,8 @@ package com.project.feature_auth_module.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,31 +18,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.booktrails.ui_module.SubmitButton
+import androidx.compose.ui.unit.sp
+import com.booktrails.ui_module.CustomPasswordTextField
+import com.booktrails.ui_module.CustomUserNameTextField
 import com.booktrails.ui_module.R
+import com.booktrails.ui_module.SubmitButton
+import com.psfilter.feature_auth_module.ui.presentation.Login
+import com.psfilter.feature_auth_module.ui.presentation.Password
 
 @Composable
 fun LoginScreen(
@@ -56,196 +58,173 @@ fun LoginScreen(
         onRegisterClick = onRegisterClick,
         onSignInClick = onSignInClick,
         onGoogleSignInCLick = {}, //TODO
-        onFaceBookSignInClick = {},  //TODO
         isLoading = false //TODO
     )
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreenUI(
     paddingValues: PaddingValues,
+    isLoading: Boolean,
     onClickForgetPassword: () -> Unit,
     onRegisterClick: () -> Unit,
     onSignInClick: () -> Unit,
     onGoogleSignInCLick: () -> Unit,
-    onFaceBookSignInClick: () -> Unit,
-    isLoading: Boolean
 ) {
 
-    val rememberMeState = rememberSaveable { mutableStateOf(false) }
-    val loginText = rememberSaveable { mutableStateOf("") }
-    val passwordText = rememberSaveable { mutableStateOf("") }
+/*    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()*/
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = paddingValues.calculateBottomPadding()
+    val loginText = remember { mutableStateOf(Login("")) }
+    val loginPlaceholder =  stringResource(R.string.login)
+    val loginErrorMessage = "Login is invalid" //TODO
+    val isLoginInError = false //TODO
+
+    val passwordText = remember { mutableStateOf(Password("")) }
+    val passwordPlaceholder =  stringResource(R.string.password)
+    val passwordErrorMessage = "Enter Password" //TODO
+    val isPasswordInError = false //TODO
+
+    val buttonText = "Submit" //TODO
+    val isButtonActive = true //TODO
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = colorResource(R.color.floral_white))
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                top = paddingValues.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding()
+            ),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.back_ic),
+            contentDescription = null,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.sign_in_title),
+            style = MaterialTheme.typography.headlineLarge,
+            fontFamily = FontFamily(Font(R.font.roboto_bold)),
+            fontSize = 26.sp,
+            color = colorResource(id = R.color.dark_brown),
+            modifier = Modifier.padding(top = 15.dp, start = 16.dp),
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        CustomUserNameTextField(
+            value = loginText.value.raw,
+            onValueChange = { loginText.value = Login(it) },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = loginPlaceholder,
+            errorMessage = loginErrorMessage,
+            isError = isLoginInError
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        CustomPasswordTextField(
+            value = passwordText.value.raw,
+            onValueChange = { passwordText.value = Password(it) },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = passwordPlaceholder,
+            errorMessage = passwordErrorMessage,
+            isError = isPasswordInError
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
+        ) {
+
+            TextButton(onClick = { if (!isLoading) onClickForgetPassword.invoke() }) {
+                Text(
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colorResource(id = R.color.antique_rose),
+                    text = stringResource(R.string.forget_password),
                 )
-                .alpha(if (isLoading) 0.3f else 1f), // Apply opacity to content
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        SubmitButton(buttonText, isButtonActive, {onSignInClick.invoke()}, )
+
+        Spacer(modifier = Modifier.height(2.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.sign_in_title),
-                style = MaterialTheme.typography.headlineLarge,
-                color = colorResource(id = R.color.black),
-                modifier = Modifier.padding(top = 38.dp, start = 16.dp),
+                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.antique_rose),
+                style = MaterialTheme.typography.bodyMedium,
+                text = stringResource(R.string.don_t_have_an_account)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            OutlinedTextField(
-                value = loginText.value,
-                onValueChange = { loginText.value = it },
-                label = { Text(stringResource(R.string.login)) },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    //setting the text field background when it is focused
-                    focusedLabelColor = colorResource(id = R.color.light_grey),
-
-                    //setting the text field background when it is unfocused or initial state
-                    unfocusedLabelColor = colorResource(id = R.color.light_grey),
-
-                    //setting the text field background when it is disabled
-                    focusedTextColor = colorResource(id = R.color.black),
-                )
-/*                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedLabelColor = colorResource(id = R.color.light_grey),
-                    unfocusedLabelColor = colorResource(id = R.color.light_grey),
-                    focusedBorderColor = colorResource(id = R.color.light_grey),
-                    unfocusedBorderColor = colorResource(id = R.color.light_grey),
-                    focusedTextColor = colorResource(id = R.color.black),
-                ),*/
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = passwordText.value,
-                onValueChange = { passwordText.value = it },
-                label = { Text(stringResource(R.string.password)) },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    //setting the text field background when it is focused
-                    focusedLabelColor = colorResource(id = R.color.light_grey),
-
-                    //setting the text field background when it is unfocused or initial state
-                    unfocusedLabelColor = colorResource(id = R.color.light_grey),
-
-                    //setting the text field background when it is disabled
-                    focusedTextColor = colorResource(id = R.color.black),
-                )
-/*                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedLabelColor = colorResource(id = R.color.light_grey),
-                    unfocusedLabelColor = colorResource(id = R.color.light_grey),
-                    focusedBorderColor = colorResource(id = R.color.light_grey),
-                    unfocusedBorderColor = colorResource(id = R.color.light_grey),
-                    focusedTextColor = colorResource(id = R.color.black),
-                )*/
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        checked = rememberMeState.value,
-                        onCheckedChange = { rememberMeState.value = it },
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = colorResource(id = R.color.blue),
-                            uncheckedColor = colorResource(id = R.color.light_grey)
-                        )
-                    )
-                    Text(
-                        style = MaterialTheme.typography.bodyMedium,
-                        text = stringResource(R.string.remember_me)
-                    )
-                }
-
-                TextButton(onClick = { if (!isLoading) onClickForgetPassword.invoke() }) {
-                    Text(
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = colorResource(id = R.color.blue),
-                        text = stringResource(R.string.forget_password),
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            SubmitButton(
-                onClick = { if (!isLoading) onSignInClick() },
-                text = stringResource(R.string.sign_in)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            TextButton(onClick = { if (!isLoading) onRegisterClick.invoke() }) {
                 Text(
+                    fontFamily = FontFamily(Font(R.font.roboto_medium)),
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.antique_rose),
                     style = MaterialTheme.typography.bodyMedium,
-                    text = stringResource(R.string.don_t_have_an_account)
+                    text = stringResource(R.string.register)
                 )
-
-                TextButton(onClick = { if (!isLoading) onRegisterClick.invoke() }) {
-                    Text(
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = colorResource(id = R.color.blue),
-                        text = stringResource(R.string.register)
-                    )
-                }
             }
+        }
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Text(
+            style = MaterialTheme.typography.bodyMedium,
+            fontFamily = FontFamily(Font(R.font.roboto_medium)),
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.antique_rose),
+            text = stringResource(R.string.or)
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
 
             Text(
+                modifier = Modifier.padding(end = 6.dp),
                 style = MaterialTheme.typography.bodyMedium,
-                color = colorResource(id = R.color.light_grey),
-                text = stringResource(R.string.or)
+                fontFamily = FontFamily(Font(R.font.roboto_medium)),
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.antique_rose),
+                text = stringResource(R.string.continue_with_google)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Image(
+                painter = painterResource(id = R.drawable.google_icon),
+                contentDescription = stringResource(R.string.google_icon),
+                modifier = Modifier
+                    .size(54.dp)
+                    .clickable {
+                        if (!isLoading) onGoogleSignInCLick.invoke()
+                    }
+            )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Spacer(modifier = Modifier.width(16.dp))
 
-                Text(
-                    modifier = Modifier.padding(end = 6.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = colorResource(id = R.color.black),
-                    text = stringResource(R.string.continue_with_google)
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.google_icon),
-                    contentDescription = stringResource(R.string.google_icon),
-                    modifier = Modifier
-                        .size(54.dp)
-                        .clickable {
-                            if (!isLoading) onGoogleSignInCLick.invoke()
-                        }
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-            }
         }
 
         if (isLoading) {
@@ -259,7 +238,7 @@ fun LoginScreenUI(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    color = colorResource(id = R.color.blue)
+                    color = colorResource(id = R.color.antique_rose)
                 )
             }
         }

@@ -5,4 +5,5 @@
     <string name="get_reading_statistics">Get reading statistics</string>
     <string name="read_books_per_month_days_spent_on_reading_per_month_and_total_hours_spent_on_reading">(read books per month, days spent on reading per month and total hours spent on reading)</string>
     <string name="add_your_books_easy_by_scanning_book_isbn_code">Add your books easy by scanning book isbn code</string>
+    <string name="by_signing_up_you_agree_to_book_trails">"By signing up, you agree to Book Trails "</string>
 </resources>

@@ -10,7 +10,8 @@
 
     <string name="sign_in">SIGN IN</string>
     <string name="send_email">SEND EMAIL</string>
-    <string name="sign_in_title">Sign in</string>
+    <string name="sign_in_title">Sign In</string>
+    <string name="sign_up_title">Sign Up</string>
     <string name="login">Login</string>
     <string name="sign_up">Sing UP</string>
     <string name="password">Password</string>
@@ -25,6 +26,7 @@
     <string name="reset_password">Reset Password</string>
     <string name="type_your_email_and_we_will_send_a_link_to_reset_your_password">Type your email and we will send a link to reset your password</string>
     <string name="email">Email</string>
+    <string name="name">Name</string>
     <string name="remember_me">Remember me</string>
     <string name="facebook_icon">FaceBook icon</string>
     <string name="continue_with_facebook">Continue with FB</string>

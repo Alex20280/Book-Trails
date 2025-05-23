@@ -1,8 +1,11 @@
 package com.project.feature_auth_module.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -10,19 +13,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,16 +33,19 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.rememberLottieComposition
-import com.booktrails.ui_module.SubmitButton
+import com.booktrails.ui_module.CustomPasswordTextField
+import com.booktrails.ui_module.CustomUserNameTextField
 import com.booktrails.ui_module.R
+import com.booktrails.ui_module.SubmitButton
+import com.psfilter.feature_auth_module.ui.presentation.ConfirmPassword
+import com.psfilter.feature_auth_module.ui.presentation.Login
+import com.psfilter.feature_auth_module.ui.presentation.Name
+import com.psfilter.feature_auth_module.ui.presentation.Password
 
 @Composable
 fun SignUpScreen(
@@ -53,166 +59,141 @@ fun SignUpScreen(
 /*    @JvmInline
     value class Password(val raw: String)*/ //TODO: use for passwords
 
+    val isLoading = false
+
     SignUpScreenUI(
         paddingValues = paddingValues,
-        onClickBackButton = onClickBackButton,
+        isLoading = isLoading,
         onRegisterButtonClick = onRegisterButtonClick,
         onTosClick = onTosClick,
         onPrivacyClick = onPrivacyClick
     )
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreenUI(
     paddingValues: PaddingValues,
-    onClickBackButton: () -> Unit,
+    isLoading: Boolean,
     onRegisterButtonClick: () -> Unit,
     onTosClick: () -> Unit,
     onPrivacyClick: () -> Unit,
 ) {
 
-    val loginText = rememberSaveable { mutableStateOf("") }
-    val passwordText = rememberSaveable { mutableStateOf("") }
-    val confirmPasswordText = rememberSaveable { mutableStateOf("") }
 
-    val compositionCongrats by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(com.booktrails.ui_module.R.raw.sign_up_animation)
-    )
+    val loginText = remember { mutableStateOf(Login("")) }
+    val emailPlaceholder =  stringResource(R.string.email)
+    val emailErrorMessage = "Email cannot be empty" //TODO
+    val isEmailInError = false //TODO
+
+    val passwordText = remember { mutableStateOf(Password("")) }
+    val passwordPlaceholder =  stringResource(R.string.password)
+    val passwordErrorMessage = "Enter Password" //TODO
+    val isPasswordInError = false //TODO
+
+    val confirmPassword = remember { mutableStateOf(ConfirmPassword("")) }
+    val confirmPasswordPlaceholder =  stringResource(R.string.confirm_password)
+    val confirmPasswordErrorMessage = "Enter Password" //TODO
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+
+    val nameText = remember { mutableStateOf(Name("")) }
+    val namePlaceholder =  stringResource(R.string.name)
+    val nameErrorMessage = "Name cannot be empty" //TODO
+    val isNameInError = false //TODO
+
+    val buttonText = "Create" //TODO
+    val isButtonActive = true //TODO
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = colorResource(R.color.floral_white))
             .padding(
                 start = 16.dp,
                 end = 16.dp,
-                bottom = paddingValues.calculateBottomPadding(),
-                top = paddingValues.calculateTopPadding()
+                top = paddingValues.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding()
             ),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(modifier = Modifier.height(16.dp))
-
         Image(
-            modifier = Modifier
-                .clickable { onClickBackButton.invoke() }
-                .size(24.dp),
-            painter = painterResource(id = R.drawable.arrow_back_icon),
-            contentDescription = stringResource(R.string.arrow_back)
+            painter = painterResource(id = R.drawable.signup_ic),
+            contentDescription = null,
+            modifier = Modifier.padding(top = 16.dp)
         )
 
         Text(
-            modifier = Modifier.padding(top = 38.dp),
-            text = stringResource(R.string.registers),
+            text = stringResource(R.string.sign_up_title),
             style = MaterialTheme.typography.headlineLarge,
+            fontFamily = FontFamily(Font(R.font.roboto_bold)),
+            fontSize = 26.sp,
+            color = colorResource(id = R.color.dark_brown),
+            modifier = Modifier.padding(top = 15.dp, start = 12.dp),
         )
 
-        LottieAnimation(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            composition = compositionCongrats, iterations = 10)
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        OutlinedTextField(
-            value = loginText.value,
-            onValueChange = { loginText.value = it },
-            label = { Text(stringResource(R.string.email)) },
+        CustomUserNameTextField(
+            value = loginText.value.raw,
+            onValueChange = { loginText.value = Login(it) },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                //setting the text field background when it is focused
-                focusedLabelColor = colorResource(id = R.color.light_grey),
-
-                //setting the text field background when it is unfocused or initial state
-                unfocusedLabelColor = colorResource(id = R.color.light_grey),
-
-                //setting the text field background when it is disabled
-                focusedTextColor = colorResource(id = R.color.black),
-            )
-
-            /*colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedLabelColor = colorResource(id = R.color.light_grey),
-                unfocusedLabelColor = colorResource(id = R.color.light_grey),
-                focusedBorderColor = colorResource(id = R.color.light_grey),
-                unfocusedBorderColor = colorResource(id = R.color.light_grey),
-                focusedTextColor = colorResource(id = R.color.black),
-            )*/,
+            placeholder = emailPlaceholder,
+            errorMessage = emailErrorMessage,
+            isError = isEmailInError
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        OutlinedTextField(
-            value = passwordText.value,
-            onValueChange = { passwordText.value = it },
-            label = { Text(stringResource(R.string.password)) },
-            visualTransformation = PasswordVisualTransformation(),
+        CustomUserNameTextField(
+            value = nameText.value.raw,
+            onValueChange = { nameText.value = Name(it) },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                //setting the text field background when it is focused
-                focusedLabelColor = colorResource(id = R.color.light_grey),
-
-                //setting the text field background when it is unfocused or initial state
-                unfocusedLabelColor = colorResource(id = R.color.light_grey),
-
-                //setting the text field background when it is disabled
-                focusedTextColor = colorResource(id = R.color.black),
-            )
-/*            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedLabelColor = colorResource(id = R.color.light_grey),
-                unfocusedLabelColor = colorResource(id = R.color.light_grey),
-                focusedBorderColor = colorResource(id = R.color.light_grey),
-                unfocusedBorderColor = colorResource(id = R.color.light_grey),
-                focusedTextColor = colorResource(id = R.color.black),
-            )*/
+            placeholder = namePlaceholder,
+            errorMessage = nameErrorMessage,
+            isError = isNameInError
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        OutlinedTextField(
-            value = confirmPasswordText.value,
-            onValueChange = { confirmPasswordText.value = it },
-            label = { Text(stringResource(R.string.confirm_password)) },
-            visualTransformation = PasswordVisualTransformation(),
+        CustomPasswordTextField(
+            value = passwordText.value.raw,
+            onValueChange = { passwordText.value = Password(it) },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                //setting the text field background when it is focused
-                focusedLabelColor = colorResource(id = R.color.light_grey),
-
-                //setting the text field background when it is unfocused or initial state
-                unfocusedLabelColor = colorResource(id = R.color.light_grey),
-
-                //setting the text field background when it is disabled
-                focusedTextColor = colorResource(id = R.color.black),
-            )
-/*            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedLabelColor = colorResource(id = R.color.light_grey),
-                unfocusedLabelColor = colorResource(id = R.color.light_grey),
-                focusedBorderColor = colorResource(id = R.color.light_grey),
-                unfocusedBorderColor = colorResource(id = R.color.light_grey),
-                focusedTextColor = colorResource(id = R.color.black),
-            )*/
+            placeholder = passwordPlaceholder,
+            errorMessage = passwordErrorMessage,
+            isError = isPasswordInError
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        SubmitButton(
-            onClick = onRegisterButtonClick,
-            text = stringResource(R.string.sign_up)
+        CustomPasswordTextField(
+            value = confirmPassword.value.raw,
+            onValueChange = { confirmPassword.value = ConfirmPassword(it) },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = confirmPasswordPlaceholder,
+            errorMessage = confirmPasswordErrorMessage,
+            isError = isPasswordInError
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        SubmitButton(buttonText, isButtonActive, {}, )
+
+        Spacer(modifier = Modifier.height(2.dp))
 
         val annotatedString = buildAnnotatedString {
-            append("By signing up, you agree to Book Trails ")
+            append(stringResource(com.project.feature_auth_module.R.string.by_signing_up_you_agree_to_book_trails))
             val robotoRegular = FontFamily(Font(R.font.roboto_regular))
 
             pushStringAnnotation(tag = stringResource(R.string.tos), annotation = stringResource(R.string.termofservice))
             withStyle(
                 style = SpanStyle(
-                    color = colorResource(id = com.booktrails.ui_module.R.color.blue),
+                    color = colorResource(id = R.color.antique_rose),
                     fontFamily = robotoRegular,
+                    fontWeight = FontWeight.Bold,
                     textDecoration = TextDecoration.Underline
                 )
             ) {
@@ -228,8 +209,9 @@ fun SignUpScreenUI(
             )
             withStyle(
                 style = SpanStyle(
-                    color = colorResource(id = com.booktrails.ui_module.R.color.blue),
+                    color = colorResource(id = R.color.antique_rose),
                     fontFamily = robotoRegular,
+                    fontWeight = FontWeight.Bold,
                     textDecoration = TextDecoration.Underline
                 )
             ) {
@@ -254,5 +236,21 @@ fun SignUpScreenUI(
             }
         )
 
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = Color.Black.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(8.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = colorResource(id = R.color.antique_rose)
+                )
+            }
+        }
     }
+
 }

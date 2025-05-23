@@ -15,7 +15,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.booktrails.ui_module.R
-import com.booktrails.ui_module.SubmitButton
+import com.booktrails.ui_module.NextButton
 
 @Composable
 fun ForgetPasswordScreen(
@@ -124,7 +123,7 @@ fun ForgetPasswordScreenUI(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        SubmitButton(
+        NextButton(
             onClick = onRestorePasswordClick,
             text = stringResource(R.string.send_email)
         )
