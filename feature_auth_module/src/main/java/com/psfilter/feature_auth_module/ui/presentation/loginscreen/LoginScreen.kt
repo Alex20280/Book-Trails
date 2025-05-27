@@ -3,8 +3,6 @@ package com.project.feature_auth_module.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,10 +21,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,11 +34,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.booktrails.ui_module.CustomPasswordTextField
-import com.booktrails.ui_module.CustomUserNameTextField
+import com.booktrails.ui_module.CustomInputTextField
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
-import com.psfilter.feature_auth_module.ui.presentation.Login
-import com.psfilter.feature_auth_module.ui.presentation.Password
+import com.psfilter.feature_auth_module.ui.AuthFields
 
 @Composable
 fun LoginScreen(
@@ -72,16 +67,16 @@ fun LoginScreenUI(
     onGoogleSignInCLick: () -> Unit,
 ) {
 
-/*    val interactionSource = remember { MutableInteractionSource() }
-    val isFocused by interactionSource.collectIsFocusedAsState()*/
+    /*    val interactionSource = remember { MutableInteractionSource() }
+        val isFocused by interactionSource.collectIsFocusedAsState()*/
 
-    val loginText = remember { mutableStateOf(Login("")) }
-    val loginPlaceholder =  stringResource(R.string.login)
+    val loginText = remember { mutableStateOf(AuthFields.Login("")) }
+    val loginPlaceholder = stringResource(R.string.login)
     val loginErrorMessage = "Login is invalid" //TODO
     val isLoginInError = false //TODO
 
-    val passwordText = remember { mutableStateOf(Password("")) }
-    val passwordPlaceholder =  stringResource(R.string.password)
+    val passwordText = remember { mutableStateOf(AuthFields.Password("")) }
+    val passwordPlaceholder = stringResource(R.string.password)
     val passwordErrorMessage = "Enter Password" //TODO
     val isPasswordInError = false //TODO
 
@@ -119,9 +114,9 @@ fun LoginScreenUI(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        CustomUserNameTextField(
+        CustomInputTextField(
             value = loginText.value.raw,
-            onValueChange = { loginText.value = Login(it) },
+            onValueChange = { loginText.value = AuthFields.Login(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = loginPlaceholder,
             errorMessage = loginErrorMessage,
@@ -132,7 +127,7 @@ fun LoginScreenUI(
 
         CustomPasswordTextField(
             value = passwordText.value.raw,
-            onValueChange = { passwordText.value = Password(it) },
+            onValueChange = { passwordText.value = AuthFields.Password(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = passwordPlaceholder,
             errorMessage = passwordErrorMessage,
@@ -158,7 +153,7 @@ fun LoginScreenUI(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        SubmitButton(buttonText, isButtonActive, {onSignInClick.invoke()}, )
+        SubmitButton(buttonText, isButtonActive, { onSignInClick.invoke() })
 
         Spacer(modifier = Modifier.height(2.dp))
 

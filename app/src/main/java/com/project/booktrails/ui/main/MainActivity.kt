@@ -41,6 +41,7 @@ import com.project.booktrails.ui.theme.BookTrailsTheme
 import com.project.feature_auth_module.ui.ForgetPasswordScreen
 import com.project.feature_auth_module.ui.LoginScreen
 import com.project.feature_auth_module.ui.SignUpScreen
+import com.psfilter.feature_auth_module.ui.presentation.createnewpassword.CreateNewPasswordScreen
 import com.psfilter.feature_auth_module.ui.presentation.onboardingscreen.OnBoardingOneScreen
 import com.psfilter.feature_auth_module.ui.presentation.onboardingscreen.OnBoardingThreeScreen
 import com.psfilter.feature_auth_module.ui.presentation.onboardingscreen.OnBoardingTwoScreen
@@ -415,8 +416,27 @@ fun BookTrailsApp() {
                 ) {
                     ForgetPasswordScreen(
                         paddingValues = innerPadding,
-                        onClickBackButton = { navController.navigateUp() },
-                        onRestorePasswordClick = { }) //TODO Restore Password Click
+                        onRestorePasswordClick = { },
+                        onCreateAccountClick = {navController.navigate(
+                            NavigationScreens.CreateNewPassword(
+                                it
+                            )
+                        )}
+                    )
+                }
+
+                composable<NavigationScreens.CreateNewPassword>(
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                ) {
+                    val idArgs = it.toRoute<NavigationScreens.CreateNewPassword>()
+                    CreateNewPasswordScreen(
+                        paddingValues = innerPadding,
+                        verificationCode = idArgs.id,
+                        onSaveClick = {  navController.navigate(NavigationScreens.LoginScreen) },
+                    )
                 }
 
                 navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -452,13 +472,3 @@ fun BookTrailsApp() {
 
     }
 }
-
-/*    private fun holdSplashScreen(){
-        lifecycleScope.launch {
-            delay(1000)
-            keepSplashScreen = false
-        }
-    }
-
-}
-*/

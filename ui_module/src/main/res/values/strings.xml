@@ -23,7 +23,7 @@
     <string name="google_icon">Google Icon</string>
     <string name="continue_with_google">Continue with </string>
     <string name="logo">Logo</string>
-    <string name="reset_password">Reset Password</string>
+    <string name="reset_password">Reset Your Password</string>
     <string name="type_your_email_and_we_will_send_a_link_to_reset_your_password">Type your email and we will send a link to reset your password</string>
     <string name="email">Email</string>
     <string name="name">Name</string>
@@ -31,7 +31,7 @@
     <string name="facebook_icon">FaceBook icon</string>
     <string name="continue_with_facebook">Continue with FB</string>
     <string name="tos">TOS</string>
-    <string name="termofservice">TermOfService</string>
+    <string name="termofservice">Term Of Service</string>
     <string name="privacy">PRIVACY</string>
     <string name="privacypolicy">PrivacyPolicy</string>
     <string name="term_of_service">Term of Service</string>

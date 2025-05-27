@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,13 +38,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.booktrails.ui_module.CustomPasswordTextField
-import com.booktrails.ui_module.CustomUserNameTextField
+import com.booktrails.ui_module.CustomInputTextField
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
-import com.psfilter.feature_auth_module.ui.presentation.ConfirmPassword
-import com.psfilter.feature_auth_module.ui.presentation.Login
-import com.psfilter.feature_auth_module.ui.presentation.Name
-import com.psfilter.feature_auth_module.ui.presentation.Password
+import com.psfilter.feature_auth_module.ui.AuthFields
 
 @Composable
 fun SignUpScreen(
@@ -80,24 +76,24 @@ fun SignUpScreenUI(
 ) {
 
 
-    val loginText = remember { mutableStateOf(Login("")) }
+    val loginText = remember { mutableStateOf(AuthFields.Login("")) }
     val emailPlaceholder =  stringResource(R.string.email)
     val emailErrorMessage = "Email cannot be empty" //TODO
     val isEmailInError = false //TODO
 
-    val passwordText = remember { mutableStateOf(Password("")) }
+    val passwordText = remember { mutableStateOf(AuthFields.Password("")) }
     val passwordPlaceholder =  stringResource(R.string.password)
     val passwordErrorMessage = "Enter Password" //TODO
     val isPasswordInError = false //TODO
 
-    val confirmPassword = remember { mutableStateOf(ConfirmPassword("")) }
+    val confirmPassword = remember { mutableStateOf(AuthFields.ConfirmPassword("")) }
     val confirmPasswordPlaceholder =  stringResource(R.string.confirm_password)
     val confirmPasswordErrorMessage = "Enter Password" //TODO
 
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
 
-    val nameText = remember { mutableStateOf(Name("")) }
+    val nameText = remember { mutableStateOf(AuthFields.Name("")) }
     val namePlaceholder =  stringResource(R.string.name)
     val nameErrorMessage = "Name cannot be empty" //TODO
     val isNameInError = false //TODO
@@ -136,9 +132,9 @@ fun SignUpScreenUI(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        CustomUserNameTextField(
+        CustomInputTextField(
             value = loginText.value.raw,
-            onValueChange = { loginText.value = Login(it) },
+            onValueChange = { loginText.value = AuthFields.Login(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = emailPlaceholder,
             errorMessage = emailErrorMessage,
@@ -147,9 +143,9 @@ fun SignUpScreenUI(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        CustomUserNameTextField(
+        CustomInputTextField(
             value = nameText.value.raw,
-            onValueChange = { nameText.value = Name(it) },
+            onValueChange = { nameText.value = AuthFields.Name(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = namePlaceholder,
             errorMessage = nameErrorMessage,
@@ -160,7 +156,7 @@ fun SignUpScreenUI(
 
         CustomPasswordTextField(
             value = passwordText.value.raw,
-            onValueChange = { passwordText.value = Password(it) },
+            onValueChange = { passwordText.value = AuthFields.Password(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = passwordPlaceholder,
             errorMessage = passwordErrorMessage,
@@ -171,7 +167,7 @@ fun SignUpScreenUI(
 
         CustomPasswordTextField(
             value = confirmPassword.value.raw,
-            onValueChange = { confirmPassword.value = ConfirmPassword(it) },
+            onValueChange = { confirmPassword.value = AuthFields.ConfirmPassword(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = confirmPasswordPlaceholder,
             errorMessage = confirmPasswordErrorMessage,
