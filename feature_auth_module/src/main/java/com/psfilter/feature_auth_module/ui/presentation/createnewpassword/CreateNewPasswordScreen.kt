@@ -58,12 +58,10 @@ fun CreateNewPasswordScreenUI(
 
     val passwordText = remember { mutableStateOf(AuthFields.Password("")) }
     val passwordPlaceholder =  stringResource(R.string.password)
-    val passwordErrorMessage = "Enter Password" //TODO
     val isPasswordInError = false //TODO
 
     val confirmPassword = remember { mutableStateOf(AuthFields.ConfirmPassword("")) }
     val confirmPasswordPlaceholder =  stringResource(R.string.confirm_password)
-    val confirmPasswordErrorMessage = "Enter Password" //TODO
     val isConfirmPasswordInError = false //TODO
 
     val buttonText = "Save" //TODO
@@ -105,7 +103,6 @@ fun CreateNewPasswordScreenUI(
             value = verificationCodeState.value.raw, // Access the String value
             onValueChange = { newValue -> verificationCodeState.value = AuthFields.VerificationCode(newValue) },modifier = Modifier.fillMaxWidth(),
             placeholder = verificationPlaceholder,
-            errorMessage = null,
             isError = null
         )
 
@@ -116,7 +113,6 @@ fun CreateNewPasswordScreenUI(
             onValueChange = { passwordText.value = AuthFields.Password(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = passwordPlaceholder,
-            errorMessage = passwordErrorMessage,
             isError = isPasswordInError
         )
 
@@ -127,7 +123,6 @@ fun CreateNewPasswordScreenUI(
             onValueChange = { confirmPassword.value = AuthFields.ConfirmPassword(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = confirmPasswordPlaceholder,
-            errorMessage = confirmPasswordErrorMessage,
             isError = isConfirmPasswordInError
         )
 

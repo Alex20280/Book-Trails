@@ -48,6 +48,7 @@ import com.psfilter.feature_auth_module.ui.presentation.onboardingscreen.OnBoard
 import com.psfilter.feature_auth_module.ui.presentation.policyscreen.PrivacyPolicyScreen
 import com.psfilter.feature_auth_module.ui.presentation.splashscreen.SplashScreen
 import com.psfilter.feature_auth_module.ui.presentation.tosscreen.TosScreen
+import com.psfilter.feature_auth_module.ui.presentation.verifyemail.VerifyEmailScreen
 
 class MainActivity() : ComponentActivity() {
 
@@ -188,6 +189,9 @@ fun BookTrailsApp() {
                         paddingValues = innerPadding,
                         onClickForgetPassword = { navController.navigate(NavigationScreens.ForgetPasswordScreen) },
                         onRegisterClick = { navController.navigate(NavigationScreens.SignUpScreen) },
+                        onVerifyEmailClick = {
+                            navController.navigate(NavigationScreens.VerifyEmailScreen)
+                        },
                         onSignInClick = {
                             navController.navigate(NavigationScreens.HomeScreen) {
                                 popUpTo(navController.graph.id) { inclusive = false }
@@ -401,10 +405,23 @@ fun BookTrailsApp() {
                     val context = LocalContext.current
                     SignUpScreen(
                         paddingValues = innerPadding,
-                        onClickBackButton = { navController.navigateUp() },
-                        onRegisterButtonClick = {}, //TODO implement registration
+                        navigateToVerifyEmailScreen = {navController.navigate(NavigationScreens.VerifyEmailScreen)},
                         onTosClick = { navController.navigate(NavigationScreens.TosScreen) },
                         onPrivacyClick = { navController.navigate(NavigationScreens.PrivacyPolicyScreen) },
+                    )
+                }
+
+                composable<NavigationScreens.VerifyEmailScreen>(
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right) }
+                ) {
+                    VerifyEmailScreen(
+                        paddingValues = innerPadding,
+                        onSaveClick = {
+                            navController.navigate(NavigationScreens.LoginScreen)
+                        }
                     )
                 }
 

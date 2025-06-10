@@ -43,6 +43,7 @@ import com.psfilter.feature_auth_module.ui.AuthFields
 fun LoginScreen(
     paddingValues: PaddingValues,
     onClickForgetPassword: () -> Unit,
+    onVerifyEmailClick: () -> Unit,
     onRegisterClick: () -> Unit,
     onSignInClick: () -> Unit,
 ) {
@@ -50,6 +51,7 @@ fun LoginScreen(
     LoginScreenUI(
         paddingValues = paddingValues,
         onClickForgetPassword = onClickForgetPassword,
+        onVerifyEmail = onVerifyEmailClick,
         onRegisterClick = onRegisterClick,
         onSignInClick = onSignInClick,
         onGoogleSignInCLick = {}, //TODO
@@ -62,6 +64,7 @@ fun LoginScreenUI(
     paddingValues: PaddingValues,
     isLoading: Boolean,
     onClickForgetPassword: () -> Unit,
+    onVerifyEmail: () -> Unit,
     onRegisterClick: () -> Unit,
     onSignInClick: () -> Unit,
     onGoogleSignInCLick: () -> Unit,
@@ -72,12 +75,10 @@ fun LoginScreenUI(
 
     val loginText = remember { mutableStateOf(AuthFields.Login("")) }
     val loginPlaceholder = stringResource(R.string.login)
-    val loginErrorMessage = "Login is invalid" //TODO
     val isLoginInError = false //TODO
 
     val passwordText = remember { mutableStateOf(AuthFields.Password("")) }
     val passwordPlaceholder = stringResource(R.string.password)
-    val passwordErrorMessage = "Enter Password" //TODO
     val isPasswordInError = false //TODO
 
     val buttonText = "Submit" //TODO
@@ -119,7 +120,6 @@ fun LoginScreenUI(
             onValueChange = { loginText.value = AuthFields.Login(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = loginPlaceholder,
-            errorMessage = loginErrorMessage,
             isError = isLoginInError
         )
 
@@ -130,7 +130,6 @@ fun LoginScreenUI(
             onValueChange = { passwordText.value = AuthFields.Password(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = passwordPlaceholder,
-            errorMessage = passwordErrorMessage,
             isError = isPasswordInError
         )
 
@@ -142,13 +141,33 @@ fun LoginScreenUI(
             horizontalArrangement = Arrangement.End
         ) {
 
-            TextButton(onClick = { if (!isLoading) onClickForgetPassword.invoke() }) {
-                Text(
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = colorResource(id = R.color.antique_rose),
-                    text = stringResource(R.string.forget_password),
-                )
-            }
+            Text(
+                modifier = Modifier
+                    .clickable {
+                        if (!isLoading) onClickForgetPassword.invoke()
+                    }
+                    .padding(top = 8.dp, end = 8.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                color = colorResource(id = R.color.antique_rose),
+                text = stringResource(R.string.forget_password),
+            )
+        }
+
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Text(
+                modifier = Modifier
+                    .clickable {
+                        if (!isLoading) onVerifyEmail.invoke()
+                    }
+                    .padding(top = 10.dp, end = 8.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                color = colorResource(id = R.color.antique_rose),
+                text = stringResource(com.project.feature_auth_module.R.string.verify_email),
+            )
+
         }
 
         Spacer(modifier = Modifier.height(10.dp))

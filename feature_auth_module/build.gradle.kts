@@ -63,4 +63,9 @@ dependencies {
 
     //Lottie animation
     implementation (libs.lottie)
+
+    //Retrofit
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.gson)
 }

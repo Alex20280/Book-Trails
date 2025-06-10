@@ -78,7 +78,6 @@ fun ForgetPasswordScreenUI(
 
     val emailText = remember { mutableStateOf(AuthFields.Login("")) }
     val loginPlaceholder = stringResource(R.string.login)
-    val loginErrorMessage = "Login is invalid" //TODO
     val isLoginInError = false //TODO
 
     val verificationCode = remember { mutableStateOf(AuthFields.VerificationCode("")) }
@@ -130,7 +129,6 @@ fun ForgetPasswordScreenUI(
                     .fillMaxWidth()
                     .padding(bottom = 0.dp), // Explicitly remove bottom padding
                 placeholder = loginPlaceholder,
-                errorMessage = loginErrorMessage,
                 isError = isLoginInError,
                 borderTint = isVerificationCodeSentOut
             )
@@ -173,7 +171,6 @@ fun ForgetPasswordScreenUI(
                 onValueChange = { verificationCode.value = AuthFields.VerificationCode(it) },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = verificationPlaceholder,
-                errorMessage = loginErrorMessage,
                 isError = isLoginInError
             )
 

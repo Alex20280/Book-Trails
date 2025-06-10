@@ -9,4 +9,10 @@
     <string name="send_code_again">Send code again</string>
     <string name="account_not_found_click_below_to_create_a_new_one">Account not found\nClick below to create a new one</string>
     <string name="create_account">Create account</string>
+    <string name="create">Create</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="save">Save</string>
+    <string name="code">Verification code</string>
+    <string name="resend_code">Resend code</string>
+    <string name="verify_your_email">Verify your email</string>
 </resources>

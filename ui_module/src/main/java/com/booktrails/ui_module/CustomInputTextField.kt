@@ -1,36 +1,49 @@
 package com.booktrails.ui_module
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun CustomInputTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    errorMessage: String?,
     placeholder: String,
     modifier: Modifier = Modifier,
     isError: Boolean? = false,
-    borderTint: Boolean = false
+    borderTint: Boolean = false,
+    onFocusChanged: ((Boolean) -> Unit)? = null
 ) {
 
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier,
+        modifier = modifier
+            .height(50.dp)
+            .onFocusChanged { focusState ->
+                onFocusChanged?.invoke(focusState.isFocused)
+            },
         shape = RoundedCornerShape(8.dp),
         isError = isError == true,
+
         placeholder = {
             Text(
-                text = if (isError == true && !errorMessage.isNullOrEmpty()) errorMessage else placeholder,
-                color = if (isError == true) colorResource(id = R.color.red) else colorResource(id = R.color.warm_grey)
+                text = if (isError == true) "" else placeholder,
+                color = if (isError == true) colorResource(id = R.color.red) else colorResource(id = R.color.warm_grey),
+                modifier = Modifier.wrapContentHeight(Alignment.CenterVertically)
             )
         },
         colors = TextFieldDefaults.colors(

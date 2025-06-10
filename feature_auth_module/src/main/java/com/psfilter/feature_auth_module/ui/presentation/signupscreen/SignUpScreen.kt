@@ -1,9 +1,8 @@
 package com.project.feature_auth_module.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +18,15 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,66 +43,85 @@ import com.booktrails.ui_module.CustomPasswordTextField
 import com.booktrails.ui_module.CustomInputTextField
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
-import com.psfilter.feature_auth_module.ui.AuthFields
+import com.psfilter.feature_auth_module.ui.presentation.signupscreen.state.RegistrationFormState
+import com.psfilter.feature_auth_module.ui.presentation.signupscreen.state.RegistrationUiState
+import com.psfilter.feature_auth_module.ui.presentation.signupscreen.viewmodel.SignUpViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SignUpScreen(
     paddingValues: PaddingValues,
-    onClickBackButton: () -> Unit,
-    onRegisterButtonClick: () -> Unit,
+    navigateToVerifyEmailScreen: () -> Unit,
     onTosClick: () -> Unit,
     onPrivacyClick: () -> Unit,
 ) {
 
-/*    @JvmInline
-    value class Password(val raw: String)*/ //TODO: use for passwords
+    val context = LocalContext.current
 
-    val isLoading = false
+    val showLoader = remember { mutableStateOf(false) }
+
+    val viewModel: SignUpViewModel = koinViewModel()
+
+    val registrationState by viewModel.registrationState.collectAsState()
+    val formState by viewModel.formState
+
+    LaunchedEffect(registrationState) {
+        when (val currentState = registrationState) {
+            is RegistrationUiState.Success -> {
+                showLoader.value = false
+                navigateToVerifyEmailScreen.invoke()
+            }
+            is RegistrationUiState.Loading -> {
+                showLoader.value = true
+            }
+            is RegistrationUiState.Error -> {
+                showLoader.value = false
+                Toast.makeText(context, currentState.message, Toast.LENGTH_LONG).show()
+            }
+            else -> {
+                showLoader.value = false
+              }
+        }
+    }
 
     SignUpScreenUI(
         paddingValues = paddingValues,
-        isLoading = isLoading,
-        onRegisterButtonClick = onRegisterButtonClick,
+        showLoader = showLoader.value,
+        formState = formState,
+        onEmailChange = viewModel::updateEmail,
+        onNameChange = viewModel::updateName,
+        onPasswordChange = viewModel::updatePassword,
+        onConfirmPasswordChange = viewModel::updateConfirmPassword,
+        onRegisterButtonClick = { viewModel.registerNewUser() },
         onTosClick = onTosClick,
-        onPrivacyClick = onPrivacyClick
+        onPrivacyClick = onPrivacyClick,
+        onEmailFocusLost = viewModel::validateEmailOnFocusLost,
+        onNameFocusLost = viewModel::validateNameOnFocusLost,
+        onPasswordFocusLost = viewModel::validatePasswordOnFocusLost,
+        onConfirmPasswordFocusLost = viewModel::validateConfirmPasswordOnFocusLost,
+        isButtonEnabled = viewModel.isRegistrationButtonEnabled(),
     )
 }
 
 @Composable
 fun SignUpScreenUI(
     paddingValues: PaddingValues,
-    isLoading: Boolean,
+    formState: RegistrationFormState,
+    onEmailChange: (String) -> Unit,
+    onNameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    showLoader: Boolean,
     onRegisterButtonClick: () -> Unit,
     onTosClick: () -> Unit,
     onPrivacyClick: () -> Unit,
+    onEmailFocusLost: () -> Unit,
+    onNameFocusLost: () -> Unit,
+    onPasswordFocusLost: () -> Unit,
+    onConfirmPasswordFocusLost: () -> Unit,
+    isButtonEnabled: Boolean
+
 ) {
-
-
-    val loginText = remember { mutableStateOf(AuthFields.Login("")) }
-    val emailPlaceholder =  stringResource(R.string.email)
-    val emailErrorMessage = "Email cannot be empty" //TODO
-    val isEmailInError = false //TODO
-
-    val passwordText = remember { mutableStateOf(AuthFields.Password("")) }
-    val passwordPlaceholder =  stringResource(R.string.password)
-    val passwordErrorMessage = "Enter Password" //TODO
-    val isPasswordInError = false //TODO
-
-    val confirmPassword = remember { mutableStateOf(AuthFields.ConfirmPassword("")) }
-    val confirmPasswordPlaceholder =  stringResource(R.string.confirm_password)
-    val confirmPasswordErrorMessage = "Enter Password" //TODO
-
-    val interactionSource = remember { MutableInteractionSource() }
-    val isFocused by interactionSource.collectIsFocusedAsState()
-
-    val nameText = remember { mutableStateOf(AuthFields.Name("")) }
-    val namePlaceholder =  stringResource(R.string.name)
-    val nameErrorMessage = "Name cannot be empty" //TODO
-    val isNameInError = false //TODO
-
-    val buttonText = "Create" //TODO
-    val isButtonActive = true //TODO
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -133,50 +154,106 @@ fun SignUpScreenUI(
         Spacer(modifier = Modifier.height(12.dp))
 
         CustomInputTextField(
-            value = loginText.value.raw,
-            onValueChange = { loginText.value = AuthFields.Login(it) },
+            value = formState.email,
+            onValueChange = onEmailChange,
+            onFocusChanged = { hasFocus ->
+                if (!hasFocus) onEmailFocusLost()
+            },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = emailPlaceholder,
-            errorMessage = emailErrorMessage,
-            isError = isEmailInError
+            placeholder = stringResource(R.string.email),
+            isError = formState.emailError != null
         )
+
+        formState.emailError?.let { error ->
+            Text(
+                text = error,
+                style = MaterialTheme.typography.bodySmall,
+                color = colorResource(id = R.color.red),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, start = 4.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(10.dp))
 
         CustomInputTextField(
-            value = nameText.value.raw,
-            onValueChange = { nameText.value = AuthFields.Name(it) },
+            value = formState.name,
+            onValueChange = onNameChange,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = namePlaceholder,
-            errorMessage = nameErrorMessage,
-            isError = isNameInError
+            onFocusChanged = { hasFocus ->
+                if (!hasFocus) onNameFocusLost()
+            },
+            placeholder = stringResource(R.string.name),
+            isError = formState.nameError != null
         )
+        formState.nameError?.let { error ->
+            Text(
+                text = error,
+                style = MaterialTheme.typography.bodySmall,
+                color = colorResource(id = R.color.red),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, start = 4.dp)
+            )
+        }
+
 
         Spacer(modifier = Modifier.height(10.dp))
 
         CustomPasswordTextField(
-            value = passwordText.value.raw,
-            onValueChange = { passwordText.value = AuthFields.Password(it) },
+            value = formState.password,
+            onValueChange = onPasswordChange,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = passwordPlaceholder,
-            errorMessage = passwordErrorMessage,
-            isError = isPasswordInError
+            onFocusChanged = { hasFocus ->
+                if (!hasFocus) onPasswordFocusLost()
+            },
+            placeholder = stringResource(R.string.password),
+            isError = formState.passwordError != null
         )
+        formState.passwordError?.let { error ->
+            Text(
+                text = error,
+                style = MaterialTheme.typography.bodySmall,
+                color = colorResource(id = R.color.red),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, start = 4.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(10.dp))
 
         CustomPasswordTextField(
-            value = confirmPassword.value.raw,
-            onValueChange = { confirmPassword.value = AuthFields.ConfirmPassword(it) },
+            value = formState.confirmPassword,
+            onValueChange = onConfirmPasswordChange,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = confirmPasswordPlaceholder,
-            errorMessage = confirmPasswordErrorMessage,
-            isError = isPasswordInError
+            onFocusChanged = { hasFocus ->
+                if (!hasFocus) onConfirmPasswordFocusLost()
+            },
+            placeholder = stringResource(R.string.confirm_password),
+            isError = formState.confirmPasswordError != null
         )
+        formState.confirmPasswordError?.let { error ->
+            Text(
+                text = error,
+                style = MaterialTheme.typography.bodySmall,
+                color = colorResource(id = R.color.red),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, start = 4.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        SubmitButton(buttonText, isButtonActive, {}, )
+        SubmitButton(
+            stringResource(com.project.feature_auth_module.R.string.create),
+            isButtonEnabled,
+            {
+                onRegisterButtonClick.invoke()
+            },
+        )
 
         Spacer(modifier = Modifier.height(2.dp))
 
@@ -184,7 +261,10 @@ fun SignUpScreenUI(
             append(stringResource(com.project.feature_auth_module.R.string.by_signing_up_you_agree_to_book_trails))
             val robotoRegular = FontFamily(Font(R.font.roboto_regular))
 
-            pushStringAnnotation(tag = stringResource(R.string.tos), annotation = stringResource(R.string.termofservice))
+            pushStringAnnotation(
+                tag = stringResource(R.string.tos),
+                annotation = stringResource(R.string.termofservice)
+            )
             withStyle(
                 style = SpanStyle(
                     color = colorResource(id = R.color.antique_rose),
@@ -199,9 +279,10 @@ fun SignUpScreenUI(
 
             append(stringResource(R.string.and))
 
-            pushStringAnnotation(tag = stringResource(R.string.privacy), annotation = stringResource(
-                R.string.privacypolicy
-            )
+            pushStringAnnotation(
+                tag = stringResource(R.string.privacy), annotation = stringResource(
+                    R.string.privacypolicy
+                )
             )
             withStyle(
                 style = SpanStyle(
@@ -232,20 +313,21 @@ fun SignUpScreenUI(
             }
         )
 
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = Color.Black.copy(alpha = 0.1f),
-                        shape = RoundedCornerShape(8.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = colorResource(id = R.color.antique_rose)
-                )
-            }
+
+    }
+    if (showLoader) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = Color.Black.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                color = colorResource(id = R.color.antique_rose)
+            )
         }
     }
 

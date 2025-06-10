@@ -10,6 +10,8 @@ sealed class NavigationScreens(val icon: Int, val route: String) {
     @Serializable
     data object SignUpScreen: NavigationScreens(0, "")
     @Serializable
+    data object VerifyEmailScreen: NavigationScreens(0, "")
+    @Serializable
     data object TosScreen: NavigationScreens(0, "")
     @Serializable
     data object OnBoardingOneScreen: NavigationScreens(0, "")
