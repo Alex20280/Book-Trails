@@ -1,5 +1,6 @@
 package com.booktrails.ui_module
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,20 +24,29 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CustomCodeTextField(
     value: String,
+    showCodeMessage: Boolean,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    modifier: Modifier
+    modifier: Modifier,
+    onClick: (() -> Unit)? = null
 ) {
 
     Box(
         modifier = modifier
-            .height(50.dp),
+            .height(50.dp)
+            .let { modifier ->
+                if (onClick != null) {
+                    modifier.clickable { onClick() }
+                } else {
+                    modifier
+                }
+            },
         contentAlignment = Alignment.Center
     ) {
         OutlinedTextField(
             value = value,
             onValueChange = { newValue ->
-                if (newValue.length <= 4 && newValue.all { it.isDigit() }) {
+                if (newValue.length <= 4 && newValue.all { it.isEnglishLetterOrDigit() }) {
                     onValueChange(newValue)
                 }
             },
@@ -51,18 +61,18 @@ fun CustomCodeTextField(
                 )
             },
             visualTransformation = VisualTransformation.None,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             maxLines = 1,
             singleLine = true,
-            textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center), // Center the text
+            textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
             colors = TextFieldDefaults.colors(
                 focusedTextColor = colorResource(id = R.color.antique_rose),
                 unfocusedTextColor = colorResource(id = R.color.antique_rose),
                 focusedContainerColor = colorResource(id = R.color.floral_white),
                 unfocusedContainerColor = colorResource(id = R.color.floral_white),
                 errorContainerColor = colorResource(id = R.color.floral_white),
-                focusedIndicatorColor = colorResource(id = R.color.antique_rose),
-                unfocusedIndicatorColor = colorResource(id = R.color.antique_rose),
+                focusedIndicatorColor = if (showCodeMessage) colorResource(id = R.color.salad_green) else colorResource(id = R.color.antique_rose),
+                unfocusedIndicatorColor = if (showCodeMessage) colorResource(id = R.color.salad_green) else colorResource(id = R.color.antique_rose),
                 errorIndicatorColor = colorResource(id = R.color.red),
                 errorTextColor = colorResource(id = R.color.red),
                 errorPlaceholderColor = colorResource(id = R.color.red),
@@ -75,4 +85,8 @@ fun CustomCodeTextField(
             )
         )
     }
+}
+
+fun Char.isEnglishLetterOrDigit(): Boolean {
+    return this in 'A'..'Z' || this in 'a'..'z' || this in '0'..'9'
 }

@@ -1,6 +1,5 @@
 package com.psfilter.feature_auth_module.ui.presentation.signupscreen.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -152,7 +151,6 @@ class SignUpViewModel (
     fun registerNewUser() {
         val currentState = _formState.value
 
-        // Полная валидация перед отправкой
         val validatedState = currentState.copy(
             emailError = validateEmail(currentState.email),
             nameError = validateName(currentState.name),
@@ -175,7 +173,6 @@ class SignUpViewModel (
 
         viewModelScope.launch {
             _registrationState.value = RegistrationUiState.Loading
-            Log.d("MyLosdingstate", " when loading: " +_registrationState.value.toString())
             val registrationRequest = registrationModel.toEmailRegistrationRequest()
             val response = registerWithEmailAndPasswordUseCase.invoke(registrationRequest)
             handleRegistrationResponse(response)
@@ -186,29 +183,34 @@ class SignUpViewModel (
         when (response) {
             is RequestResult.Success -> {
                 _registrationState.value = RegistrationUiState.Success(response.data)
-                Log.d("MyLosdingstate", " when success: " + _registrationState.value.toString())
             }
 
             is RequestResult.Error -> {
-                val errorMessage = when (response.error) {
+                val error = response.error
+                val errorMessage = when (error) {
                     DataError.EmailPasswordAuth.INCORRECT_EMAIL_FORMAT ->
                         "Please enter a valid email address"
 
-                    DataError.EmailPasswordAuth.ACCOUNT_ALREADY_EXISTS ->
-                        "Account already exists"
+                    DataError.EmailPasswordAuth.ACCOUNT_ALREADY_EXISTS_BUT_NOT_VERIFIED ->
+                        "Account already exists but not verified"
 
                     DataError.EmailPasswordAuth.UNEXPECTED_ERROR ->
-                        "Something went wrong. Please try again."
+                        "Something went wrong. Please try again"
+
+                    DataError.EmailPasswordAuth.NETWORK_TIMEOUT ->
+                        "Couldn't connect. Please try again later"
+
+                    DataError.EmailPasswordAuth.NETWORK_ERROR ->
+                        "Check internet connection and try again"
+
+                    DataError.EmailPasswordAuth.ACCOUNT_ALREADY_IN_USE ->
+                        "Account already exists"
                 }
-                _registrationState.value = RegistrationUiState.Error(errorMessage)
+                _registrationState.value = RegistrationUiState.Error(errorMessage, error)
             }
 
             else -> Unit
         }
-    }
-
-    private fun handleRegistrationError(exception: Exception) {
-        // Обработка сетевых ошибок
     }
 
 }

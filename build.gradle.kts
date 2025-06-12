@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     //id("org.sonarqube") version "5.1.0.4882"
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.google.gms.google.services) apply false
 
 }
 

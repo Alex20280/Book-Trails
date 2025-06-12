@@ -127,6 +127,32 @@ object ValidationUtils {
         return ValidationResult.Success
     }
 
+    fun validateCode(code: String): ValidationResult {
+        val trimmedCode = code.trim()
+
+        if (trimmedCode.isEmpty()) {
+            return ValidationResult.Error("Code cannot be empty")
+        }
+
+        if (trimmedCode.length < 4) {
+            return ValidationResult.Error("Code must be exactly 4 characters long")
+        }
+
+        if (trimmedCode.length > 4) {
+            return ValidationResult.Error("Code must be exactly 4 characters long")
+        }
+
+        if (trimmedCode.contains(" ")) {
+            return ValidationResult.Error("Code must not contain spaces")
+        }
+
+        if (!trimmedCode.all { it.isLetterOrDigit() }) {
+            return ValidationResult.Error("Code must contain only letters and digits")
+        }
+
+        return ValidationResult.Success
+    }
+
     fun validatePasswordConfirmation(password: String, confirmPassword: String): ValidationResult {
         if (confirmPassword.isEmpty()) {
             return ValidationResult.Error("Confirm password")

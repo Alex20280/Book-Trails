@@ -4,5 +4,4 @@ data class ConfirmEmailState(
     val email: String = "",
     val code: String = "",
     val emailError: String? = null,
-    //val codeError: String? = null,
 )

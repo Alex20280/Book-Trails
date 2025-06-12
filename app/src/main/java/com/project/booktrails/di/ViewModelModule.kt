@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { SplashScreenViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
-    viewModel { VerifyEmailViewModel() }
+    viewModel { VerifyEmailViewModel(get(), get()) }
 }

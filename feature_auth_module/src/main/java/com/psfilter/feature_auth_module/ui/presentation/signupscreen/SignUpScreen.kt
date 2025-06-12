@@ -3,6 +3,7 @@ package com.project.feature_auth_module.ui
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +45,8 @@ import com.booktrails.ui_module.CustomPasswordTextField
 import com.booktrails.ui_module.CustomInputTextField
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
+import com.booktrails.ui_module.VerifyEmailDialog
+import com.network_module.errorhandling.DataError
 import com.psfilter.feature_auth_module.ui.presentation.signupscreen.state.RegistrationFormState
 import com.psfilter.feature_auth_module.ui.presentation.signupscreen.state.RegistrationUiState
 import com.psfilter.feature_auth_module.ui.presentation.signupscreen.viewmodel.SignUpViewModel
@@ -65,22 +69,31 @@ fun SignUpScreen(
     val registrationState by viewModel.registrationState.collectAsState()
     val formState by viewModel.formState
 
+    var showVerificationDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(registrationState) {
         when (val currentState = registrationState) {
             is RegistrationUiState.Success -> {
                 showLoader.value = false
                 navigateToVerifyEmailScreen.invoke()
             }
+
             is RegistrationUiState.Loading -> {
                 showLoader.value = true
             }
+
             is RegistrationUiState.Error -> {
                 showLoader.value = false
-                Toast.makeText(context, currentState.message, Toast.LENGTH_LONG).show()
+                if (currentState.error == DataError.EmailPasswordAuth.ACCOUNT_ALREADY_EXISTS_BUT_NOT_VERIFIED) {
+                    showVerificationDialog = true
+                } else {
+                    Toast.makeText(context, currentState.message, Toast.LENGTH_LONG).show()
+                }
             }
+
             else -> {
                 showLoader.value = false
-              }
+            }
         }
     }
 
@@ -100,6 +113,9 @@ fun SignUpScreen(
         onPasswordFocusLost = viewModel::validatePasswordOnFocusLost,
         onConfirmPasswordFocusLost = viewModel::validateConfirmPasswordOnFocusLost,
         isButtonEnabled = viewModel.isRegistrationButtonEnabled(),
+        onVerifyEmail = navigateToVerifyEmailScreen,
+        showVerificationDialog = showVerificationDialog,
+        onOverlayVisibilityChange = { showVerificationDialog = it }
     )
 }
 
@@ -119,7 +135,10 @@ fun SignUpScreenUI(
     onNameFocusLost: () -> Unit,
     onPasswordFocusLost: () -> Unit,
     onConfirmPasswordFocusLost: () -> Unit,
-    isButtonEnabled: Boolean
+    isButtonEnabled: Boolean,
+    onVerifyEmail: () -> Unit,
+    showVerificationDialog: Boolean,
+    onOverlayVisibilityChange: (Boolean) -> Unit
 
 ) {
     Column(
@@ -315,6 +334,8 @@ fun SignUpScreenUI(
 
 
     }
+
+
     if (showLoader) {
         Box(
             modifier = Modifier
@@ -331,4 +352,19 @@ fun SignUpScreenUI(
         }
     }
 
+    if (showVerificationDialog) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.4f))
+                .padding(start = 16.dp, end = 16.dp)
+                .clickable { onOverlayVisibilityChange(false) },
+            contentAlignment = Alignment.Center
+        ) {
+            VerifyEmailDialog(
+                onVerifyEmail,
+                onOverlayVisibilityChange = onOverlayVisibilityChange
+            )
+        }
+    }
 }

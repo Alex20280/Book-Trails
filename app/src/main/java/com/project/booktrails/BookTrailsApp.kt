@@ -3,6 +3,7 @@ package com.project.booktrails
 import android.app.Application
 import com.project.booktrails.di.appModule
 import com.project.booktrails.di.dataStoreModule
+import com.project.booktrails.di.firebaseModule
 import com.project.booktrails.di.networkModule
 import com.project.booktrails.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -15,7 +16,7 @@ class BookTrailsApp: Application() {
 
         GlobalContext.startKoin {
             androidContext(this@BookTrailsApp)
-            modules(listOf(appModule, networkModule, viewModelModule, dataStoreModule))
+            modules(listOf(appModule, networkModule, firebaseModule, viewModelModule, dataStoreModule))
         }
     }
 }

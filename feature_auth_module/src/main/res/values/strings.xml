@@ -15,4 +15,6 @@
     <string name="code">Verification code</string>
     <string name="resend_code">Resend code</string>
     <string name="verify_your_email">Verify your email</string>
+    <string name="submit">Submit</string>
+    <string name="request_was_sent_out">Request was sent out</string>
 </resources>

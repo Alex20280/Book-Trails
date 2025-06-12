@@ -21,8 +21,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +39,7 @@ import com.booktrails.ui_module.CustomPasswordTextField
 import com.booktrails.ui_module.CustomInputTextField
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
+import com.booktrails.ui_module.VerifyEmailDialog
 import com.psfilter.feature_auth_module.ui.AuthFields
 
 @Composable
@@ -48,6 +51,8 @@ fun LoginScreen(
     onSignInClick: () -> Unit,
 ) {
 
+    var showVerificationDialog by remember { mutableStateOf(false) }
+
     LoginScreenUI(
         paddingValues = paddingValues,
         onClickForgetPassword = onClickForgetPassword,
@@ -55,7 +60,9 @@ fun LoginScreen(
         onRegisterClick = onRegisterClick,
         onSignInClick = onSignInClick,
         onGoogleSignInCLick = {}, //TODO
-        isLoading = false //TODO
+        isLoading = false, //TODO
+        showVerificationDialog = showVerificationDialog,
+        onOverlayVisibilityChange = { showVerificationDialog = it }
     )
 }
 
@@ -68,6 +75,8 @@ fun LoginScreenUI(
     onRegisterClick: () -> Unit,
     onSignInClick: () -> Unit,
     onGoogleSignInCLick: () -> Unit,
+    showVerificationDialog: Boolean,
+    onOverlayVisibilityChange: (Boolean) -> Unit
 ) {
 
     /*    val interactionSource = remember { MutableInteractionSource() }
@@ -83,6 +92,8 @@ fun LoginScreenUI(
 
     val buttonText = "Submit" //TODO
     val isButtonActive = true //TODO
+
+    //var isEmailNotVerifiedOverlayVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -153,7 +164,7 @@ fun LoginScreenUI(
             )
         }
 
-        Box(
+/*        Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
@@ -168,7 +179,7 @@ fun LoginScreenUI(
                 text = stringResource(com.project.feature_auth_module.R.string.verify_email),
             )
 
-        }
+        }*/
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -239,6 +250,13 @@ fun LoginScreenUI(
 
             Spacer(modifier = Modifier.width(16.dp))
 
+        }
+
+        if (showVerificationDialog){
+            VerifyEmailDialog(
+                onVerifyEmail,
+                onOverlayVisibilityChange = onOverlayVisibilityChange
+            )
         }
 
         if (isLoading) {

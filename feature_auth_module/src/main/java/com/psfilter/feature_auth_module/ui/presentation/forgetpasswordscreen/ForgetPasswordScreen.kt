@@ -199,7 +199,6 @@ fun ForgetPasswordScreenUI(
                 AccountNotFoundCard(
                     onCreateAccountClick = {
                         onCreateAccountClick.invoke(verificationCode.value.raw.toInt())
-                        Log.d("MyCode", "Before"+ verificationCode.value.raw)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

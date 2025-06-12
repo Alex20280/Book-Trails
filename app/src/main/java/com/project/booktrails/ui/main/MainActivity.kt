@@ -405,7 +405,10 @@ fun BookTrailsApp() {
                     val context = LocalContext.current
                     SignUpScreen(
                         paddingValues = innerPadding,
-                        navigateToVerifyEmailScreen = {navController.navigate(NavigationScreens.VerifyEmailScreen)},
+                        navigateToVerifyEmailScreen = {
+                            navController.navigate(NavigationScreens.VerifyEmailScreen){
+                                popUpTo(NavigationScreens.SignUpScreen) { inclusive = true }
+                            } },
                         onTosClick = { navController.navigate(NavigationScreens.TosScreen) },
                         onPrivacyClick = { navController.navigate(NavigationScreens.PrivacyPolicyScreen) },
                     )
@@ -419,7 +422,7 @@ fun BookTrailsApp() {
                 ) {
                     VerifyEmailScreen(
                         paddingValues = innerPadding,
-                        onSaveClick = {
+                        navigateTLoginScreen = {
                             navController.navigate(NavigationScreens.LoginScreen)
                         }
                     )

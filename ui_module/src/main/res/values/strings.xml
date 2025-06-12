@@ -44,4 +44,6 @@
     <string name="onboardingone_screen">OnBoardingOne Screen</string>
     <string name="onboardingthree_screen">OnBoardingThree Screen</string>
     <string name="onboardingtwo_screen">OnBoardingTwo Screen</string>
+    <string name="account_either_already_exists_or_not_verified">Account either already exists or not verified</string>
+    <string name="verify">Verify</string>
 </resources>
