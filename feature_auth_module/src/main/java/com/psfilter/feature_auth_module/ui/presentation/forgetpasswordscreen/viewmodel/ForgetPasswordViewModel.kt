@@ -34,12 +34,26 @@ class ForgetPasswordViewModel(
         MutableStateFlow<ForgetPasswordUiState>(ForgetPasswordUiState.None)
     val requestVerificationCodeState: StateFlow<ForgetPasswordUiState> = _requestVerificationCodeState.asStateFlow()
 
+    private val _showCodeField = MutableStateFlow(false)
+    val showCodeField: StateFlow<Boolean> = _showCodeField.asStateFlow()
+
     private val _formState = mutableStateOf(ForgetPasswordFormState())
     val formState: State<ForgetPasswordFormState> = _formState
 
 
     fun resetForgetPasswordState() {
         _requestVerificationCodeState.value = ForgetPasswordUiState.None
+    }
+
+    fun setShowCodeField(show: Boolean) {
+        _showCodeField.value = show
+        // Сбрасываем код при скрытии поля
+        if (!show) {
+            _formState.value = _formState.value.copy(
+                code = AuthFields.VerificationCode(""),
+                codeError = null
+            )
+        }
     }
 
     fun updateEmail(newEmail: String) {
@@ -86,8 +100,21 @@ class ForgetPasswordViewModel(
         return state.email.raw.isNotEmpty()
     }
 
+    private fun isCodeFilled(): Boolean {
+        val state = _formState.value
+        return state.code.raw.isNotEmpty()
+    }
+
     fun isLoginButtonEnabled(): Boolean {
-        return isEmailFilled() && !hasValidationErrors() && _requestVerificationCodeState.value != ForgetPasswordUiState.Loading
+        val isEmailValid = isEmailFilled() && !hasValidationErrors()
+        val isNotLoading = _requestVerificationCodeState.value != ForgetPasswordUiState.Loading
+
+        return if (_showCodeField.value) {
+            val isCodeValid = isCodeFilled() && validateCodeForm(_formState.value.code.raw) == null
+            isEmailValid && isCodeValid && isNotLoading
+        } else {
+            isEmailValid && isNotLoading
+        }
     }
 
     fun sendForgetPasswordCode(request: Boolean) {
@@ -97,14 +124,22 @@ class ForgetPasswordViewModel(
             emailError = validateEmailForm(currentState.email.raw)
         )
 
-        _formState.value = validateEmailState
+        val validateState = if (_showCodeField.value) {
+            validateEmailState.copy(
+                codeError = validateCodeForm(currentState.code.raw)
+            )
+        } else {
+            validateEmailState
+        }
+
+        _formState.value = validateState
 
         if (hasValidationErrors()) {
             return
         }
 
         val registrationModel = ForgetPasswordModel(
-            email = validateEmailState.email.raw,
+            email = validateState.email.raw,
             isResent = request,
         )
 

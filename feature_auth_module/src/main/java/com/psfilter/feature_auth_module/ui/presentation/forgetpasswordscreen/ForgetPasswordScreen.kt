@@ -65,21 +65,36 @@ fun ForgetPasswordScreen(
     val viewModel: ForgetPasswordViewModel = koinViewModel()
     val showLoader = remember { mutableStateOf(false) }
     val isVerificationCodeSentOut = remember { mutableStateOf(false) }
-    val showCodeField = remember { mutableStateOf(false) }
     val requestVerificationCodeState by viewModel.requestVerificationCodeState.collectAsState()
     val isFirstRequest by viewModel.isFirstRequest.collectAsState()
     val isInitialCodeRequest by viewModel.isInitialCodeRequest.collectAsState()
     var showAccountNotFoundDialog by remember { mutableStateOf(false) }
     val formState by viewModel.formState
+    val showCodeField by viewModel.showCodeField.collectAsState()
 
-    //isVerificationCodeSentOut change to true when sent out and show for 5 sec
+    var resendTimer by remember { mutableStateOf(0) }
+    var isResendEnabled by remember { mutableStateOf(true) }
+
+    LaunchedEffect(resendTimer) {
+        if (resendTimer > 0) {
+            kotlinx.coroutines.delay(1000L)
+            resendTimer--
+        } else {
+            isResendEnabled = true
+        }
+    }
+
 
     LaunchedEffect(requestVerificationCodeState) {
         when (val currentState = requestVerificationCodeState) {
             is ForgetPasswordUiState.Success -> {
                 showLoader.value = false
-                showCodeField.value = true
+                //showCodeField.value = true
+                viewModel.setShowCodeField(true)
                 isVerificationCodeSentOut.value = true
+
+                kotlinx.coroutines.delay(5000L)
+                isVerificationCodeSentOut.value = false
             }
 
             is ForgetPasswordUiState.Loading -> {
@@ -106,9 +121,15 @@ fun ForgetPasswordScreen(
         showLoader = showLoader.value,
         paddingValues = paddingValues,
         onSendCodeAgainClick = {
-            viewModel.sendForgetPasswordCode(isInitialCodeRequest)
+            if (isResendEnabled) {
+                resendTimer = 30
+                isResendEnabled = false
+                viewModel.sendForgetPasswordCode(isInitialCodeRequest)
+            }
         },
         onRestoreClick =  {
+            resendTimer = 30
+            isResendEnabled = false
             viewModel.sendForgetPasswordCode(isFirstRequest)
         },
         onCreateAccountClick = onCreateAccountClick,
@@ -121,9 +142,11 @@ fun ForgetPasswordScreen(
         showAccountNotFoundDialog = showAccountNotFoundDialog,
         formState = formState,
         isVerificationCodeSentOut = isVerificationCodeSentOut.value,
-        showCodeField = showCodeField.value,
+        showCodeField = showCodeField,
         forgetPasswordState = requestVerificationCodeState,
-        navigateToCreateNewPassword = navigateToCreateNewPassword
+        navigateToCreateNewPassword = navigateToCreateNewPassword,
+        resendTimer = resendTimer,
+        isResendEnabled = isResendEnabled,
 
     )
 }
@@ -147,7 +170,9 @@ fun ForgetPasswordScreenUI(
     forgetPasswordState: ForgetPasswordUiState,
     showCodeField: Boolean,
     navigateToCreateNewPassword: (String) -> Unit,
-    viewModel: ForgetPasswordViewModel
+    viewModel: ForgetPasswordViewModel,
+    resendTimer: Int,
+    isResendEnabled: Boolean,
 ) {
 
     Box(
@@ -228,14 +253,26 @@ fun ForgetPasswordScreenUI(
                     )
                 }
                 Text(
-                    text = stringResource(com.project.feature_auth_module.R.string.send_code_again),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        textDecoration = TextDecoration.Underline,
+                    text = if (isResendEnabled || resendTimer == 0) {
+                        stringResource(com.project.feature_auth_module.R.string.send_code_again)
+                    } else {
+                        "Повторить через $resendTimer сек"
+                    },
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        textDecoration = if (isResendEnabled) TextDecoration.Underline else TextDecoration.None,
                         fontWeight = FontWeight.Bold
                     ),
-                    color = colorResource(id = R.color.antique_rose),
+                    color = if (isResendEnabled) {
+                        colorResource(id = R.color.antique_rose)
+                    } else {
+                        colorResource(id = R.color.dark_brown).copy(alpha = 0.6f)
+                    },
                     modifier = Modifier
-                        .clickable { onSendCodeAgainClick.invoke() }
+                        .clickable(enabled = isResendEnabled) {
+                            if (isResendEnabled) {
+                                onSendCodeAgainClick.invoke()
+                            }
+                        }
                         .padding(0.dp),
                     textAlign = TextAlign.End
                 )
