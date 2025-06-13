@@ -5,7 +5,7 @@ import com.network_module.model.response.EmailRegistrationResponse
 
 sealed interface RegistrationUiState {
     data class Success(val response: EmailRegistrationResponse) : RegistrationUiState
-    data class Error(val message: String, val error: DataError.EmailPasswordAuth) : RegistrationUiState
+    data class Error(val message: String, val error: DataError.EmailPasswordRegistration) : RegistrationUiState
     object Loading : RegistrationUiState
     object None : RegistrationUiState
 }

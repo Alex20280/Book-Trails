@@ -1,4 +1,4 @@
-package com.psfilter.feature_auth_module.ui.presentation.splashscreen
+package com.psfilter.feature_auth_module.ui.presentation.splashscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

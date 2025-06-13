@@ -13,6 +13,7 @@ import com.network_module.model.response.ResendVerificationCodeResponse
 import com.psfilter.feature_auth_module.ui.domain.usecase.ResendEmailVerificationCodeUseCase
 import com.psfilter.feature_auth_module.ui.domain.usecase.VerifyEmailUseCase
 import com.psfilter.feature_auth_module.ui.presentation.ValidationUtils
+import com.psfilter.feature_auth_module.ui.presentation.ValidationUtils.validateEmailForm
 import com.psfilter.feature_auth_module.ui.presentation.verifyemail.state.ConfirmEmailState
 import com.psfilter.feature_auth_module.ui.presentation.verifyemail.state.ResendDVerificationEmailState
 import com.psfilter.feature_auth_module.ui.presentation.verifyemail.state.VerificationEmailUiState
@@ -44,15 +45,8 @@ class VerifyEmailViewModel(
         val email = _formState.value.email
         if (email.isNotEmpty()) {
             _formState.value = _formState.value.copy(
-                emailError = validateEmail(email)
+                emailError = validateEmailForm(email)
             )
-        }
-    }
-
-    private fun validateEmail(email: String): String? {
-        return when (val validation = ValidationUtils.validateEmail(email)) {
-            is ValidationUtils.ValidationResult.Error -> validation.message
-            is ValidationUtils.ValidationResult.Success -> null
         }
     }
 
@@ -73,11 +67,12 @@ class VerifyEmailViewModel(
         return state.emailError != null
     }
 
+
     fun verifyEmail() {
         val currentState = _formState.value
 
         val validatedState = currentState.copy(
-            emailError = validateEmail(currentState.email),
+            emailError = validateEmailForm(currentState.email),
         )
 
         _formState.value = validatedState
@@ -95,19 +90,8 @@ class VerifyEmailViewModel(
             _emailVerificationUiState.value = VerificationEmailUiState.Loading
             val response = verifyEmailUseCase.invoke(
                 emailVerificationModel
-                /*EmailVerificationRequest(
-                    formState.value.email,
-                    formState.value.code
-                )*/
             )
             handleEmailVerificationRequest(response)
-        }
-    }
-
-    private fun validateCode(code: String): String? {
-        return when (val validation = ValidationUtils.validateCode(code)) {
-            is ValidationUtils.ValidationResult.Error -> validation.message
-            is ValidationUtils.ValidationResult.Success -> null
         }
     }
 
@@ -142,7 +126,7 @@ class VerifyEmailViewModel(
         val currentState = _formState.value
 
         val validatedState = currentState.copy(
-            emailError = validateEmail(currentState.email),
+            emailError = validateEmailForm(currentState.email),
         )
 
         _formState.value = validatedState

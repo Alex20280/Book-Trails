@@ -11,13 +11,13 @@ object ValidationUtils {
     }
 
     /**
-     * Валидация email согласно требованиям:
-     * - Стандартный формат (user@example.com)
-     * - Длина от 6 до 320 символов
-     * - Специальные символы: _, ., -
-     * - Действующий домен верхнего уровня
-     * - Без пробелов и лишних спецсимволов
-     * - Регистронезависимый
+     * Email validation according to requirements:
+     * - Standard format (user@example.com)
+     * - Length from 6 to 320 characters
+     * - Special characters: _, ., -
+     * - A valid top-level domain
+     * - No spaces or extra special characters
+     * - Registry-independent
      */
     fun validateEmail(email: String): ValidationResult {
         val trimmedEmail = email.trim().lowercase()
@@ -61,14 +61,14 @@ object ValidationUtils {
     }
 
     /**
-     * Валидация пароля согласно требованиям:
-     * - Длина от 8 до 20 символов
-     * - Чувствителен к регистру
-     * - Минимум 1 заглавная буква
-     * - Минимум 1 цифра
-     * - Минимум 1 специальный символ
+     * Password validation according to the requirements:
+     * - Length from 8 to 20 characters
+     * - Case sensitive
+     * - Minimum 1 capital letter
+     * - Minimum 1 digit
+     * - Minimum 1 special character
      */
-    fun validatePassword(password: String): ValidationResult {
+    private fun validatePassword(password: String): ValidationResult {
         if (password.isEmpty()) {
             return ValidationResult.Error("Password cannot be empty")
         }
@@ -104,7 +104,7 @@ object ValidationUtils {
     }
 
 
-    fun validateName(name: String): ValidationResult {
+    private fun validateName(name: String): ValidationResult {
         val trimmedName = name.trim()
 
         if (trimmedName.isEmpty()) {
@@ -153,7 +153,7 @@ object ValidationUtils {
         return ValidationResult.Success
     }
 
-    fun validatePasswordConfirmation(password: String, confirmPassword: String): ValidationResult {
+    private fun validatePasswordConfirmation(password: String, confirmPassword: String): ValidationResult {
         if (confirmPassword.isEmpty()) {
             return ValidationResult.Error("Confirm password")
         }
@@ -165,82 +165,40 @@ object ValidationUtils {
         return ValidationResult.Success
     }
 
-    /**
-     * Комплексная валидация всех полей регистрации
-     */
-    fun validateRegistrationData(
-        email: String,
-        password: String,
-        name: String,
-        confirmPassword: String
-    ): Map<String, ValidationResult> {
-        return mapOf(
-            "email" to validateEmail(email),
-            "password" to validatePassword(password),
-            "name" to validateName(name),
-            "confirmPassword" to validatePasswordConfirmation(password, confirmPassword)
-        )
-    }
 
-    /**
-     * Проверка, все ли валидации прошли успешно
-     */
-    fun areAllValidationsSuccessful(validations: Map<String, ValidationResult>): Boolean {
-        return validations.values.all { it is ValidationResult.Success }
-    }
-
-    /**
-     * Получение всех ошибок валидации
-     */
-    fun getValidationErrors(validations: Map<String, ValidationResult>): Map<String, String> {
-        return validations.mapNotNull { (key, result) ->
-            when (result) {
-                is ValidationResult.Error -> key to result.message
-                is ValidationResult.Success -> null
-            }
-        }.toMap()
-    }
-
-/*    private val emailRegex = Regex(
-        "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$.?"
-    )
-
-    private val specialChars = setOf(
-        ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
-        ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'
-    )
-
-    fun validateEmail(email: String): ValidationResult {
-        return if (email.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            ValidationResult.Success
-        } else {
-            ValidationResult.Error("Неверный формат email")
+    fun validateEmailForm(email: String): String? {
+        return when (val validation = validateEmail(email)) {
+            is ValidationResult.Error -> validation.message
+            is ValidationResult.Success -> null
         }
     }
 
-    fun validatePassword(password: String): ValidationResult {
-        return if (password.length >= 6) {
-            ValidationResult.Success
-        } else {
-            ValidationResult.Error("Пароль должен содержать минимум 6 символов")
+    fun validateCodeForm(email: String): String? {
+        return when (val validation = validateCode(email)) {
+            is ValidationResult.Error -> validation.message
+            is ValidationResult.Success -> null
         }
     }
 
-    fun validateName(name: String): ValidationResult {
-        return if (name.isNotEmpty()) {
-            ValidationResult.Success
-        } else {
-            ValidationResult.Error("Имя не может быть пустым")
+    fun validateNameForm(name: String): String? {
+        return when (val validation = validateName(name)) {
+            is ValidationResult.Error -> validation.message
+            is ValidationResult.Success -> null
         }
     }
 
-    fun validatePasswordConfirmation(password: String, confirmPassword: String): ValidationResult {
-        return if (password == confirmPassword) {
-            ValidationResult.Success
-        } else {
-            ValidationResult.Error("Пароли не совпадают")
+    fun validatePasswordForm(password: String): String? {
+        return when (val validation = validatePassword(password)) {
+            is ValidationResult.Error -> validation.message
+            is ValidationResult.Success -> null
         }
-    }*/
+    }
 
+    fun validatePasswordConfirmationForm(password: String, confirmPassword: String): String? {
+        return when (val validation = validatePasswordConfirmation(password, confirmPassword)) {
+            is ValidationResult.Error -> validation.message
+            is ValidationResult.Success -> null
+        }
+    }
 
 }

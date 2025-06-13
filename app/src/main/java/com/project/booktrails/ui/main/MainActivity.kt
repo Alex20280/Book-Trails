@@ -406,9 +406,10 @@ fun BookTrailsApp() {
                     SignUpScreen(
                         paddingValues = innerPadding,
                         navigateToVerifyEmailScreen = {
-                            navController.navigate(NavigationScreens.VerifyEmailScreen){
+                            navController.navigate(NavigationScreens.VerifyEmailScreen) {
                                 popUpTo(NavigationScreens.SignUpScreen) { inclusive = true }
-                            } },
+                            }
+                        },
                         onTosClick = { navController.navigate(NavigationScreens.TosScreen) },
                         onPrivacyClick = { navController.navigate(NavigationScreens.PrivacyPolicyScreen) },
                     )
@@ -436,12 +437,15 @@ fun BookTrailsApp() {
                 ) {
                     ForgetPasswordScreen(
                         paddingValues = innerPadding,
-                        onRestorePasswordClick = { },
-                        onCreateAccountClick = {navController.navigate(
-                            NavigationScreens.CreateNewPassword(
-                                it
+                        navigateToCreateNewPassword = {
+                            navController.navigate(
+                                NavigationScreens.CreateNewPassword(it))
+                        },
+                        onCreateAccountClick = {
+                            navController.navigate(
+                                NavigationScreens.SignUpScreen
                             )
-                        )}
+                        }
                     )
                 }
 
@@ -455,7 +459,7 @@ fun BookTrailsApp() {
                     CreateNewPasswordScreen(
                         paddingValues = innerPadding,
                         verificationCode = idArgs.id,
-                        onSaveClick = {  navController.navigate(NavigationScreens.LoginScreen) },
+                        onSaveClick = { navController.navigate(NavigationScreens.LoginScreen) },
                     )
                 }
 

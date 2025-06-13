@@ -165,7 +165,9 @@ fun VerifyEmailScreenScreenUI(
 
             CustomInputTextField(
                 value = formState.email,
-                onValueChange = onEmailChange,
+                onValueChange = { value ->
+                    onEmailChange(value.trimEnd())
+                },
                 onFocusChanged = { hasFocus ->
                     if (!hasFocus) onEmailFocusLost()
                 },
@@ -187,7 +189,7 @@ fun VerifyEmailScreenScreenUI(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomCodeTextField(
-                showCodeMessage = showCodeMessage,
+                isError = showCodeMessage,
                 value = formState.code,
                 onValueChange = onCodeChange,
                 modifier = Modifier.fillMaxWidth(),

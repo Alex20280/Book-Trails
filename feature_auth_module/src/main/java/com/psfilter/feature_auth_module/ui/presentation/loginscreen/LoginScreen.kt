@@ -1,5 +1,6 @@
 package com.project.feature_auth_module.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,7 +44,11 @@ import com.booktrails.ui_module.CustomInputTextField
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
 import com.booktrails.ui_module.VerifyEmailDialog
-import com.psfilter.feature_auth_module.ui.AuthFields
+import com.network_module.errorhandling.DataError
+import com.psfilter.feature_auth_module.ui.presentation.loginscreen.viewmodel.LoginViewModel
+import com.psfilter.feature_auth_module.ui.presentation.loginscreen.state.LoginUiState
+import com.psfilter.feature_auth_module.ui.presentation.loginscreen.state.LoginFormState
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
@@ -51,49 +59,76 @@ fun LoginScreen(
     onSignInClick: () -> Unit,
 ) {
 
+    val context = LocalContext.current
+    val viewModel: LoginViewModel = koinViewModel()
+    val showLoader = remember { mutableStateOf(false) }
+    val loginState by viewModel.loginState.collectAsState()
     var showVerificationDialog by remember { mutableStateOf(false) }
+    val formState by viewModel.formState
+
+    LaunchedEffect(loginState) {
+        when (val currentState = loginState) {
+            is LoginUiState.Success -> {
+                showLoader.value = false
+                onSignInClick.invoke()
+            }
+
+            is LoginUiState.Loading -> {
+                showLoader.value = true
+            }
+
+            is LoginUiState.Error -> {
+                showLoader.value = false
+                if (currentState.error == DataError.EmailPasswordAuth.EMAIL_NOT_VERIFIED) {
+                    showVerificationDialog = true
+                } else {
+                    Toast.makeText(context, currentState.message, Toast.LENGTH_LONG).show()
+                }
+            }
+
+            else -> {
+                showLoader.value = false
+            }
+        }
+    }
 
     LoginScreenUI(
         paddingValues = paddingValues,
+        showLoader = showLoader.value,
+        formState = formState,
+        onEmailChange = viewModel::updateEmail,
+        onPasswordChange = viewModel::updatePassword,
         onClickForgetPassword = onClickForgetPassword,
+        onEmailFocusLost = viewModel::validateEmailOnFocusLost,
+        onPasswordFocusLost = viewModel::validatePasswordOnFocusLost,
         onVerifyEmail = onVerifyEmailClick,
         onRegisterClick = onRegisterClick,
-        onSignInClick = onSignInClick,
         onGoogleSignInCLick = {}, //TODO
-        isLoading = false, //TODO
+        onSubmitButtonClick = { viewModel.loginUser() },
         showVerificationDialog = showVerificationDialog,
-        onOverlayVisibilityChange = { showVerificationDialog = it }
+        onOverlayVisibilityChange = { showVerificationDialog = it },
+        isButtonEnabled = viewModel.isLoginButtonEnabled(),
     )
 }
 
 @Composable
 fun LoginScreenUI(
     paddingValues: PaddingValues,
-    isLoading: Boolean,
+    showLoader: Boolean,
+    formState: LoginFormState,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
     onClickForgetPassword: () -> Unit,
+    onEmailFocusLost: () -> Unit,
+    onPasswordFocusLost: () -> Unit,
     onVerifyEmail: () -> Unit,
     onRegisterClick: () -> Unit,
-    onSignInClick: () -> Unit,
     onGoogleSignInCLick: () -> Unit,
+    onSubmitButtonClick: () -> Unit,
     showVerificationDialog: Boolean,
-    onOverlayVisibilityChange: (Boolean) -> Unit
+    onOverlayVisibilityChange: (Boolean) -> Unit,
+    isButtonEnabled: Boolean,
 ) {
-
-    /*    val interactionSource = remember { MutableInteractionSource() }
-        val isFocused by interactionSource.collectIsFocusedAsState()*/
-
-    val loginText = remember { mutableStateOf(AuthFields.Login("")) }
-    val loginPlaceholder = stringResource(R.string.login)
-    val isLoginInError = false //TODO
-
-    val passwordText = remember { mutableStateOf(AuthFields.Password("")) }
-    val passwordPlaceholder = stringResource(R.string.password)
-    val isPasswordInError = false //TODO
-
-    val buttonText = "Submit" //TODO
-    val isButtonActive = true //TODO
-
-    //var isEmailNotVerifiedOverlayVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -127,22 +162,52 @@ fun LoginScreenUI(
         Spacer(modifier = Modifier.height(12.dp))
 
         CustomInputTextField(
-            value = loginText.value.raw,
-            onValueChange = { loginText.value = AuthFields.Login(it) },
+            value = formState.email.raw,
+            onValueChange = { value ->
+                onEmailChange(value.trimEnd())
+            },
+            onFocusChanged = { hasFocus ->
+                if (!hasFocus) onEmailFocusLost()
+            },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = loginPlaceholder,
-            isError = isLoginInError
+            placeholder = stringResource(R.string.login),
+            isError = formState.emailError != null
         )
+        formState.emailError?.let { error ->
+            Text(
+                text = error,
+                style = MaterialTheme.typography.bodySmall,
+                color = colorResource(id = R.color.red),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, start = 4.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(14.dp))
 
         CustomPasswordTextField(
-            value = passwordText.value.raw,
-            onValueChange = { passwordText.value = AuthFields.Password(it) },
+            value = formState.password.raw,
+            onFocusChanged = { hasFocus ->
+                if (!hasFocus) onPasswordFocusLost()
+            },
+            onValueChange = { value ->
+                onPasswordChange(value.trimEnd())
+            },                                        //{ passwordText.value = AuthFields.Password(it) },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = passwordPlaceholder,
-            isError = isPasswordInError
+            placeholder = stringResource(R.string.password),
+            isError = formState.passwordError != null
         )
+        formState.passwordError?.let { error ->
+            Text(
+                text = error,
+                style = MaterialTheme.typography.bodySmall,
+                color = colorResource(id = R.color.red),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, start = 4.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -155,7 +220,7 @@ fun LoginScreenUI(
             Text(
                 modifier = Modifier
                     .clickable {
-                        if (!isLoading) onClickForgetPassword.invoke()
+                        if (!showLoader) onClickForgetPassword.invoke()
                     }
                     .padding(top = 8.dp, end = 8.dp),
                 style = MaterialTheme.typography.bodyMedium,
@@ -164,26 +229,9 @@ fun LoginScreenUI(
             )
         }
 
-/*        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterEnd
-        ) {
-            Text(
-                modifier = Modifier
-                    .clickable {
-                        if (!isLoading) onVerifyEmail.invoke()
-                    }
-                    .padding(top = 10.dp, end = 8.dp),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colorResource(id = R.color.antique_rose),
-                text = stringResource(com.project.feature_auth_module.R.string.verify_email),
-            )
-
-        }*/
-
         Spacer(modifier = Modifier.height(10.dp))
 
-        SubmitButton(buttonText, isButtonActive, { onSignInClick.invoke() })
+        SubmitButton(stringResource(com.project.feature_auth_module.R.string.submit), isButtonEnabled, { onSubmitButtonClick.invoke() })
 
         Spacer(modifier = Modifier.height(2.dp))
 
@@ -200,7 +248,7 @@ fun LoginScreenUI(
                 text = stringResource(R.string.don_t_have_an_account)
             )
 
-            TextButton(onClick = { if (!isLoading) onRegisterClick.invoke() }) {
+            TextButton(onClick = { if (!showLoader) onRegisterClick.invoke() }) {
                 Text(
                     fontFamily = FontFamily(Font(R.font.roboto_medium)),
                     fontSize = 16.sp,
@@ -244,35 +292,44 @@ fun LoginScreenUI(
                 modifier = Modifier
                     .size(54.dp)
                     .clickable {
-                        if (!isLoading) onGoogleSignInCLick.invoke()
+                        if (!showLoader) onGoogleSignInCLick.invoke()
                     }
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
         }
-
-        if (showVerificationDialog){
+    }
+    if (showVerificationDialog) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.4f))
+                .padding(start = 16.dp, end = 16.dp)
+                .clickable { onOverlayVisibilityChange(false) },
+            contentAlignment = Alignment.Center
+        ) {
             VerifyEmailDialog(
+                text = stringResource(com.project.feature_auth_module.R.string.please_verify_your_email_address),
                 onVerifyEmail,
                 onOverlayVisibilityChange = onOverlayVisibilityChange
             )
         }
+    }
 
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = Color.Black.copy(alpha = 0.1f),
-                        shape = RoundedCornerShape(8.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = colorResource(id = R.color.antique_rose)
-                )
-            }
+    if (showLoader) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = Color.Black.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                color = colorResource(id = R.color.antique_rose)
+            )
         }
     }
 }

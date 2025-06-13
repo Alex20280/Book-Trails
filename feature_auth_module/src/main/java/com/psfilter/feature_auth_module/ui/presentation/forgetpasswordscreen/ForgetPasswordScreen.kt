@@ -1,6 +1,6 @@
 package com.project.feature_auth_module.ui
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,10 +18,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,52 +44,111 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.booktrails.ui_module.CustomCodeTextField
 import com.booktrails.ui_module.CustomInputTextField
 import com.booktrails.ui_module.R
 import com.booktrails.ui_module.SubmitButton
-import com.psfilter.feature_auth_module.ui.AuthFields
+import com.network_module.errorhandling.DataError
+import com.psfilter.feature_auth_module.ui.presentation.forgetpasswordscreen.state.ForgetPasswordFormState
+import com.psfilter.feature_auth_module.ui.presentation.forgetpasswordscreen.state.ForgetPasswordUiState
+import com.psfilter.feature_auth_module.ui.presentation.forgetpasswordscreen.viewmodel.ForgetPasswordViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ForgetPasswordScreen(
     paddingValues: PaddingValues,
-    onRestorePasswordClick: () -> Unit,
-    onCreateAccountClick: (Int) -> Unit,
+    navigateToCreateNewPassword: (String) -> Unit,
+    onCreateAccountClick: () -> Unit,
 ) {
 
-    /*    val viewModel = hiltViewModel<DetailsViewModel>()
-        val screenDetails = viewModel.feedDetails.collectAsState()*/
+    val context = LocalContext.current
+    val viewModel: ForgetPasswordViewModel = koinViewModel()
+    val showLoader = remember { mutableStateOf(false) }
+    val isVerificationCodeSentOut = remember { mutableStateOf(false) }
+    val showCodeField = remember { mutableStateOf(false) }
+    val requestVerificationCodeState by viewModel.requestVerificationCodeState.collectAsState()
+    val isFirstRequest by viewModel.isFirstRequest.collectAsState()
+    val isInitialCodeRequest by viewModel.isInitialCodeRequest.collectAsState()
+    var showAccountNotFoundDialog by remember { mutableStateOf(false) }
+    val formState by viewModel.formState
+
+    //isVerificationCodeSentOut change to true when sent out and show for 5 sec
+
+    LaunchedEffect(requestVerificationCodeState) {
+        when (val currentState = requestVerificationCodeState) {
+            is ForgetPasswordUiState.Success -> {
+                showLoader.value = false
+                showCodeField.value = true
+                isVerificationCodeSentOut.value = true
+            }
+
+            is ForgetPasswordUiState.Loading -> {
+                showLoader.value = true
+            }
+
+            is ForgetPasswordUiState.Error -> {
+                showLoader.value = false
+                if (currentState.error == DataError.ResendEmailVerificationCodeAuth.NOT_FOUND) {
+                    showAccountNotFoundDialog = true
+                } else {
+                    Toast.makeText(context, currentState.message, Toast.LENGTH_LONG).show()
+                }
+            }
+
+            else -> {
+                showLoader.value = false
+            }
+        }
+    }
 
     ForgetPasswordScreenUI(
+        viewModel = viewModel,
+        showLoader = showLoader.value,
         paddingValues = paddingValues,
-        onSendCodeAgainClick = {},
-        onRestoreClick = {},
-        onCreateAccountClick = onCreateAccountClick
+        onSendCodeAgainClick = {
+            viewModel.sendForgetPasswordCode(isInitialCodeRequest)
+        },
+        onRestoreClick =  {
+            viewModel.sendForgetPasswordCode(isFirstRequest)
+        },
+        onCreateAccountClick = onCreateAccountClick,
+        isButtonEnabled = viewModel.isLoginButtonEnabled(),
+        onEmailChange = viewModel::updateEmail,
+        onEmailFocusLost = viewModel::validateEmailOnFocusLost,
+        onCodeChange = viewModel::updateCode,
+        onCodeFocusLost = viewModel::validateCodeOnFocusLost,
+        onOverlayVisibilityChange = { showAccountNotFoundDialog = it },
+        showAccountNotFoundDialog = showAccountNotFoundDialog,
+        formState = formState,
+        isVerificationCodeSentOut = isVerificationCodeSentOut.value,
+        showCodeField = showCodeField.value,
+        forgetPasswordState = requestVerificationCodeState,
+        navigateToCreateNewPassword = navigateToCreateNewPassword
+
     )
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgetPasswordScreenUI(
+    showLoader: Boolean,
     paddingValues: PaddingValues,
     onSendCodeAgainClick: () -> Unit,
     onRestoreClick: () -> Unit,
-    onCreateAccountClick: (Int) -> Unit,
+    onCreateAccountClick: () -> Unit,
+    isButtonEnabled: Boolean,
+    isVerificationCodeSentOut: Boolean,
+    onEmailChange: (String) -> Unit,
+    onEmailFocusLost: () -> Unit,
+    onCodeFocusLost: () -> Unit,
+    onCodeChange: (String) -> Unit,
+    onOverlayVisibilityChange: (Boolean) -> Unit,
+    showAccountNotFoundDialog: Boolean,
+    formState: ForgetPasswordFormState,
+    forgetPasswordState: ForgetPasswordUiState,
+    showCodeField: Boolean,
+    navigateToCreateNewPassword: (String) -> Unit,
+    viewModel: ForgetPasswordViewModel
 ) {
-
-    var isAccountNotFoundOverlayVisible by remember { mutableStateOf(false) }
-
-    val emailText = remember { mutableStateOf(AuthFields.Login("")) }
-    val loginPlaceholder = stringResource(R.string.login)
-    val isLoginInError = false //TODO
-
-    val verificationCode = remember { mutableStateOf(AuthFields.VerificationCode("")) }
-    val verificationPlaceholder = "Verification Code"
-    val verificationMessage = "Request was sent out" //TODO
-    val isVerificationCodeSentOut = false //TODO
-
-    val buttonText = "Restore" //TODO
-    val isButtonActive = true //TODO
 
     Box(
         modifier = Modifier
@@ -96,7 +158,7 @@ fun ForgetPasswordScreenUI(
                 top = paddingValues.calculateTopPadding(),
                 bottom = paddingValues.calculateBottomPadding()
             ),
-                contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center
 
     ) {
 
@@ -123,15 +185,30 @@ fun ForgetPasswordScreenUI(
             Spacer(modifier = Modifier.height(12.dp))
 
             CustomInputTextField(
-                value = emailText.value.raw,
-                onValueChange = { emailText.value = AuthFields.Login(it) },
+                value = formState.email.raw,
+                onValueChange = { value ->
+                    onEmailChange(value.trimEnd())
+                },
+                onFocusChanged = { hasFocus ->
+                    if (!hasFocus) onEmailFocusLost()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 0.dp), // Explicitly remove bottom padding
-                placeholder = loginPlaceholder,
-                isError = isLoginInError,
+                    .padding(bottom = 0.dp),
+                placeholder = stringResource(R.string.login),
+                isError = formState.emailError != null,
                 borderTint = isVerificationCodeSentOut
             )
+            formState.emailError?.let { error ->
+                Text(
+                    text = error,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colorResource(id = R.color.red),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 2.dp, start = 4.dp)
+                )
+            }
 
             Row(
                 modifier = Modifier
@@ -142,7 +219,7 @@ fun ForgetPasswordScreenUI(
             ) {
                 if (isVerificationCodeSentOut) {
                     Text(
-                        text = verificationMessage,
+                        text = stringResource(com.project.feature_auth_module.R.string.request_was_sent_out),
                         style = MaterialTheme.typography.bodyMedium,
                         fontFamily = FontFamily(Font(R.font.roboto_bold)),
                         fontSize = 14.sp,
@@ -166,44 +243,80 @@ fun ForgetPasswordScreenUI(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            CustomInputTextField(
-                value = verificationCode.value.raw,
-                onValueChange = { verificationCode.value = AuthFields.VerificationCode(it) },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = verificationPlaceholder,
-                isError = isLoginInError
-            )
+            if (showCodeField){
+                CustomCodeTextField(
+                    isError = formState.codeError != null,
+                    value = formState.code.raw,
+                    onValueChange = onCodeChange,
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = stringResource(com.project.feature_auth_module.R.string.code),
+                    onFocusChanged = { hasFocus ->
+                        if (!hasFocus) onCodeFocusLost()
+                    }
+                )
+                formState.codeError?.let { error ->
+                    Text(
+                        text = error,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = colorResource(id = R.color.red),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 2.dp, start = 4.dp)
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(25.dp))
 
             SubmitButton(
-                 buttonText,
-                isButtonActive,
+                stringResource(com.project.feature_auth_module.R.string.restore),
+                isButtonEnabled,
                 onClick = {
-                    if (!isAccountNotFoundOverlayVisible) {
-                        isAccountNotFoundOverlayVisible = true
-
+                    if (forgetPasswordState is ForgetPasswordUiState.Success){
+                        val codeToPass = formState.code.raw
+                        viewModel.resetForgetPasswordState()
+                        navigateToCreateNewPassword.invoke(codeToPass)
+                    } else {
+                        onRestoreClick.invoke()
                     }
                 }
             )
         }
 
-        if (isAccountNotFoundOverlayVisible) {
+        if (showLoader) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = Color.Black.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(8.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = colorResource(id = R.color.antique_rose)
+                )
+            }
+        }
+
+        if (showAccountNotFoundDialog) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.85f))
-                    .blur(radius = 32.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded),
+                    .blur(radius = 32.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                    .padding(start = 16.dp, end = 16.dp)
+                    .clickable { onOverlayVisibilityChange(false) },
                 contentAlignment = Alignment.Center
             ) {
-                AccountNotFoundCard(
+                AccountNotFoundDialog(
                     onCreateAccountClick = {
-                        onCreateAccountClick.invoke(verificationCode.value.raw.toInt())
+                        onCreateAccountClick.invoke()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    onOverlayVisibilityChange = { isAccountNotFoundOverlayVisible = it }
+                    onOverlayVisibilityChange = onOverlayVisibilityChange
                 )
             }
         }
@@ -211,7 +324,7 @@ fun ForgetPasswordScreenUI(
 }
 
 @Composable
-fun AccountNotFoundCard(
+fun AccountNotFoundDialog(
     onCreateAccountClick: () -> Unit,
     modifier: Modifier = Modifier,
     onOverlayVisibilityChange: (Boolean) -> Unit

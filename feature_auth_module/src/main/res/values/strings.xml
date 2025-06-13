@@ -17,4 +17,7 @@
     <string name="verify_your_email">Verify your email</string>
     <string name="submit">Submit</string>
     <string name="request_was_sent_out">Request was sent out</string>
+    <string name="please_verify_your_email_address">Please verify your email address</string>
+    <string name="restore">Restore</string>
+    <string name="verification_code">Verification Code</string>
 </resources>

@@ -19,6 +19,7 @@ import com.project.feature_auth_module.R
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.runtime.collectAsState
+import com.psfilter.feature_auth_module.ui.presentation.splashscreen.viewmodel.SplashScreenViewModel
 
 @Composable
 fun SplashScreen(

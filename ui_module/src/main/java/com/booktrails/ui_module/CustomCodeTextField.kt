@@ -15,6 +15,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -24,16 +25,20 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CustomCodeTextField(
     value: String,
-    showCodeMessage: Boolean,
+    isError: Boolean,
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    onFocusChanged: ((Boolean) -> Unit)? = null
 ) {
 
     Box(
         modifier = modifier
             .height(50.dp)
+            .onFocusChanged { focusState ->
+                onFocusChanged?.invoke(focusState.isFocused)
+            }
             .let { modifier ->
                 if (onClick != null) {
                     modifier.clickable { onClick() }
@@ -71,8 +76,8 @@ fun CustomCodeTextField(
                 focusedContainerColor = colorResource(id = R.color.floral_white),
                 unfocusedContainerColor = colorResource(id = R.color.floral_white),
                 errorContainerColor = colorResource(id = R.color.floral_white),
-                focusedIndicatorColor = if (showCodeMessage) colorResource(id = R.color.salad_green) else colorResource(id = R.color.antique_rose),
-                unfocusedIndicatorColor = if (showCodeMessage) colorResource(id = R.color.salad_green) else colorResource(id = R.color.antique_rose),
+                focusedIndicatorColor = if (isError) colorResource(id = R.color.salad_green) else colorResource(id = R.color.antique_rose),
+                unfocusedIndicatorColor = if (isError) colorResource(id = R.color.salad_green) else colorResource(id = R.color.antique_rose),
                 errorIndicatorColor = colorResource(id = R.color.red),
                 errorTextColor = colorResource(id = R.color.red),
                 errorPlaceholderColor = colorResource(id = R.color.red),

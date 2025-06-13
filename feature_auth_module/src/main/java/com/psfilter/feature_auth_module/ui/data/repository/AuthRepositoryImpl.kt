@@ -5,9 +5,11 @@ import com.network_module.errorhandling.DataError
 import com.network_module.errorhandling.RequestResult
 import com.network_module.model.request.EmailRegistrationRequest
 import com.network_module.model.request.EmailVerificationRequest
+import com.network_module.model.request.LoginWithEmailPassRequest
 import com.network_module.model.request.ResendVerificationCodeRequest
 import com.network_module.model.response.EmailRegistrationResponse
 import com.network_module.model.response.EmailVerificationResponse
+import com.network_module.model.response.LoginWithEmailPassResponse
 import com.network_module.model.response.ResendVerificationCodeResponse
 import com.psfilter.feature_auth_module.ui.domain.AuthRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,7 +26,7 @@ class AuthRepositoryImpl(
 
     override suspend fun registerWithEmailAndPassword(
         registrationRequest: EmailRegistrationRequest
-    ): RequestResult<EmailRegistrationResponse, DataError.EmailPasswordAuth> =
+    ): RequestResult<EmailRegistrationResponse, DataError.EmailPasswordRegistration> =
         withContext(ioDispatcher) {
             try {
                 val response = registerApi.registerUserWithEmailAndPassword(registrationRequest)
@@ -32,22 +34,21 @@ class AuthRepositoryImpl(
                     RequestResult.Success(response.body()!!)
                 } else {
                     val errorType = when (response.code()) {
-                        400 -> DataError.EmailPasswordAuth.INCORRECT_EMAIL_FORMAT
-                        409 -> {
-                            val errorBody = response.errorBody()?.string()
-                            parse409Error(errorBody)
-                        }
-                        else -> DataError.EmailPasswordAuth.UNEXPECTED_ERROR
+                        400 -> DataError.EmailPasswordRegistration.INCORRECT_EMAIL_FORMAT
+                        403 -> DataError.EmailPasswordRegistration.ACCOUNT_ALREADY_EXISTS_BUT_NOT_VERIFIED
+                        409 -> DataError.EmailPasswordRegistration.ACCOUNT_ALREADY_IN_USE
+
+                        else -> DataError.EmailPasswordRegistration.UNEXPECTED_ERROR
                     }
                     RequestResult.Error(errorType)
                 }
             } catch (exception: SocketTimeoutException) {
-                RequestResult.Error(DataError.EmailPasswordAuth.NETWORK_TIMEOUT)
+                RequestResult.Error(DataError.EmailPasswordRegistration.NETWORK_TIMEOUT)
             } catch (exception: IOException) {
-                RequestResult.Error(DataError.EmailPasswordAuth.NETWORK_ERROR)
+                RequestResult.Error(DataError.EmailPasswordRegistration.NETWORK_ERROR)
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                RequestResult.Error(DataError.EmailPasswordAuth.UNEXPECTED_ERROR)
+                RequestResult.Error(DataError.EmailPasswordRegistration.UNEXPECTED_ERROR)
             }
         }
 
@@ -105,48 +106,33 @@ class AuthRepositoryImpl(
             }
         }
 
-    private fun parse409Error(errorBody: String?): DataError.EmailPasswordAuth {
-        return when {
-            errorBody?.contains("verify your email", ignoreCase = true) == true
-                -> {
-                DataError.EmailPasswordAuth.ACCOUNT_ALREADY_EXISTS_BUT_NOT_VERIFIED
-            }
+    override suspend fun loginWithEmailAndPassword(
+        loginWithEmailPassRequest: LoginWithEmailPassRequest
+    ): RequestResult<LoginWithEmailPassResponse, DataError.EmailPasswordAuth> =
+        withContext(ioDispatcher) {
+            try {
+                val response = registerApi.loginWithEmailAndPassword(loginWithEmailPassRequest)
+                if (response.isSuccessful && response.body() != null) {
+                    RequestResult.Success(response.body()!!)
+                } else {
+                    val errorType = when (response.code()) {
+                        401 -> DataError.EmailPasswordAuth.UNAUTHORIZED
+                        403 -> DataError.EmailPasswordAuth.EMAIL_NOT_VERIFIED
+                        404 -> DataError.EmailPasswordAuth.NOT_FOUND
 
-            errorBody?.contains("already exists", ignoreCase = true) == true
-                -> {
-                DataError.EmailPasswordAuth.ACCOUNT_ALREADY_IN_USE
-            }
-
-            else -> DataError.EmailPasswordAuth.UNEXPECTED_ERROR
-        }
-    }
-
-    /*    override suspend fun resendEmailVerificationCode(
-            resendVerificationCodeRequest: ResendVerificationCodeRequest
-        ): RequestResult<ResendVerificationCodeResponse, DataError.ResendEmailVerificationCodeAuth> =
-            withContext(ioDispatcher) {
-                try {
-                    val response = registerApi.resendEmailCode(resendVerificationCodeRequest)
-                    if (response.isSuccessful && response.body() != null) {
-                        RequestResult.Success(response.body()!!)
-                    } else {
-                        val error = if (response.code() == 400) {
-                            DataError.ResendEmailVerificationCodeAuth.NOT_FOUND
-                        } else {
-                            DataError.ResendEmailVerificationCodeAuth.UNEXPECTED_ERROR
-                        }
-                        RequestResult.Error(error)
+                        else -> DataError.EmailPasswordAuth.UNEXPECTED_ERROR
                     }
-                } catch (exception: SocketTimeoutException) {
-                    RequestResult.Error(DataError.ResendEmailVerificationCodeAuth.NETWORK_TIMEOUT)
-                } catch (exception: IOException) {
-                    RequestResult.Error(DataError.ResendEmailVerificationCodeAuth.NETWORK_ERROR)
-                } catch (exception: Exception) {
-                    exception.printStackTrace()
-                    RequestResult.Error(DataError.ResendEmailVerificationCodeAuth.UNEXPECTED_ERROR)
+                    RequestResult.Error(errorType)
                 }
-            }*/
-
+            } catch (exception: SocketTimeoutException) {
+                RequestResult.Error(DataError.EmailPasswordAuth.NETWORK_TIMEOUT)
+            } catch (exception: IOException) {
+                RequestResult.Error(DataError.EmailPasswordAuth.NETWORK_ERROR)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                RequestResult.Error(DataError.EmailPasswordAuth.UNEXPECTED_ERROR)
+            }
+        }
 
     /*    override suspend fun receiveFirebaseId(): String? {
             return firebaseAuth.auth.uid

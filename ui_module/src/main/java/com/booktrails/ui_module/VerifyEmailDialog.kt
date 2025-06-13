@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun VerifyEmailDialog(
+    text: String,
     onVerifyEmailClick: () -> Unit,
     onOverlayVisibilityChange: (Boolean) -> Unit
 ) {
@@ -42,7 +43,7 @@ fun VerifyEmailDialog(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.account_either_already_exists_or_not_verified),
+                text = text, //R.string.account_either_already_exists_or_not_verified
                 color = Color.White,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center

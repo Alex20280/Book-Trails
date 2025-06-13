@@ -11,6 +11,6 @@ class RegisterWithEmailAndPasswordUseCase(
 ) {
     suspend operator fun invoke(
         registrationRequest: EmailRegistrationRequest
-    ): RequestResult<EmailRegistrationResponse, DataError.EmailPasswordAuth> =
+    ): RequestResult<EmailRegistrationResponse, DataError.EmailPasswordRegistration> =
         authRepository.registerWithEmailAndPassword(registrationRequest)
 }

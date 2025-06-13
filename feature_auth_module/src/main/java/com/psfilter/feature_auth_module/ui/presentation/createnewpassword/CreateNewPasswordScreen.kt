@@ -34,7 +34,7 @@ import com.psfilter.feature_auth_module.ui.AuthFields
 @Composable
 fun CreateNewPasswordScreen(
     paddingValues: PaddingValues,
-    verificationCode: Int,
+    verificationCode: String,
     onSaveClick: () -> Unit
 ) {
 
@@ -48,7 +48,7 @@ fun CreateNewPasswordScreen(
 @Composable
 fun CreateNewPasswordScreenUI(
     paddingValues: PaddingValues,
-    verificationCode: Int,
+    verificationCode: String,
     onSaveClick: () -> Unit,
 ) {
 

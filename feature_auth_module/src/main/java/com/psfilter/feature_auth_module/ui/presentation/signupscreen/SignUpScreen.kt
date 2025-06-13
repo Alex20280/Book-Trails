@@ -84,7 +84,7 @@ fun SignUpScreen(
 
             is RegistrationUiState.Error -> {
                 showLoader.value = false
-                if (currentState.error == DataError.EmailPasswordAuth.ACCOUNT_ALREADY_EXISTS_BUT_NOT_VERIFIED) {
+                if (currentState.error == DataError.EmailPasswordRegistration.ACCOUNT_ALREADY_EXISTS_BUT_NOT_VERIFIED) {
                     showVerificationDialog = true
                 } else {
                     Toast.makeText(context, currentState.message, Toast.LENGTH_LONG).show()
@@ -173,8 +173,10 @@ fun SignUpScreenUI(
         Spacer(modifier = Modifier.height(12.dp))
 
         CustomInputTextField(
-            value = formState.email,
-            onValueChange = onEmailChange,
+            value = formState.email.raw,
+            onValueChange = { value ->
+                onEmailChange(value.trimEnd())
+            },
             onFocusChanged = { hasFocus ->
                 if (!hasFocus) onEmailFocusLost()
             },
@@ -197,8 +199,10 @@ fun SignUpScreenUI(
         Spacer(modifier = Modifier.height(10.dp))
 
         CustomInputTextField(
-            value = formState.name,
-            onValueChange = onNameChange,
+            value = formState.name.raw,
+            onValueChange = { value ->
+                onNameChange(value.trimEnd())
+            },
             modifier = Modifier.fillMaxWidth(),
             onFocusChanged = { hasFocus ->
                 if (!hasFocus) onNameFocusLost()
@@ -221,9 +225,11 @@ fun SignUpScreenUI(
         Spacer(modifier = Modifier.height(10.dp))
 
         CustomPasswordTextField(
-            value = formState.password,
-            onValueChange = onPasswordChange,
+            value = formState.password.raw,
             modifier = Modifier.fillMaxWidth(),
+            onValueChange = { value ->
+                onPasswordChange(value.trimEnd())
+            },
             onFocusChanged = { hasFocus ->
                 if (!hasFocus) onPasswordFocusLost()
             },
@@ -244,8 +250,10 @@ fun SignUpScreenUI(
         Spacer(modifier = Modifier.height(10.dp))
 
         CustomPasswordTextField(
-            value = formState.confirmPassword,
-            onValueChange = onConfirmPasswordChange,
+            value = formState.confirmPassword.raw,
+            onValueChange = { value ->
+                onConfirmPasswordChange(value.trimEnd())
+            },
             modifier = Modifier.fillMaxWidth(),
             onFocusChanged = { hasFocus ->
                 if (!hasFocus) onConfirmPasswordFocusLost()
@@ -362,6 +370,7 @@ fun SignUpScreenUI(
             contentAlignment = Alignment.Center
         ) {
             VerifyEmailDialog(
+                text = stringResource(R.string.account_either_already_exists_or_not_verified),
                 onVerifyEmail,
                 onOverlayVisibilityChange = onOverlayVisibilityChange
             )

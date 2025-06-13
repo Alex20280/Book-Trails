@@ -2,6 +2,7 @@ package com.project.booktrails.di
 
 import com.psfilter.feature_auth_module.ui.data.repository.AuthRepositoryImpl
 import com.psfilter.feature_auth_module.ui.domain.AuthRepository
+import com.psfilter.feature_auth_module.ui.domain.usecase.LoginWithEmailPasswordUseCase
 import com.psfilter.feature_auth_module.ui.domain.usecase.RegisterWithEmailAndPasswordUseCase
 import com.psfilter.feature_auth_module.ui.domain.usecase.ResendEmailVerificationCodeUseCase
 import com.psfilter.feature_auth_module.ui.domain.usecase.VerifyEmailUseCase
@@ -20,4 +21,5 @@ val appModule = module {
     single { RegisterWithEmailAndPasswordUseCase(get()) }
     single { VerifyEmailUseCase(get()) }
     single { ResendEmailVerificationCodeUseCase(get()) }
+    single { LoginWithEmailPasswordUseCase(get()) }
 }

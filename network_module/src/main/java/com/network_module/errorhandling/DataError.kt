@@ -3,7 +3,7 @@ package com.network_module.errorhandling
 sealed interface Error
 sealed interface DataError : Error {
 
-    enum class EmailPasswordAuth : DataError {
+    enum class EmailPasswordRegistration : DataError {
         INCORRECT_EMAIL_FORMAT,
         ACCOUNT_ALREADY_EXISTS_BUT_NOT_VERIFIED,
         ACCOUNT_ALREADY_IN_USE,
@@ -26,16 +26,21 @@ sealed interface DataError : Error {
         UNEXPECTED_ERROR
     }
 
-    enum class NetworkErrorType : DataError {
-        BAD_REQUEST,
-        TIMEOUT,
+    enum class EmailPasswordAuth : DataError {
         UNAUTHORIZED,
-        FORBIDDEN,
-        NOT_FOUND,
-        INTERNAL_SERVER_ERROR,
-        UNKNOWN_HTTP_ERROR
+        EMAIL_NOT_VERIFIED,
+        NETWORK_TIMEOUT,
+        NETWORK_ERROR,
+        UNEXPECTED_ERROR,
+        NOT_FOUND
     }
 
-    data class UnexpectedError(val exception: Throwable) : DataError
+
+    enum class ForgetPasswordAuth : DataError {
+        NOT_FOUND,
+        NETWORK_TIMEOUT,
+        NETWORK_ERROR,
+        UNEXPECTED_ERROR
+    }
 
 }
