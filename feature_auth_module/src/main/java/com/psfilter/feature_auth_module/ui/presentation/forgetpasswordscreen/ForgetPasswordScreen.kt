@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -75,6 +76,8 @@ fun ForgetPasswordScreen(
     var resendTimer by remember { mutableStateOf(0) }
     var isResendEnabled by remember { mutableStateOf(true) }
 
+
+
     LaunchedEffect(resendTimer) {
         if (resendTimer > 0) {
             kotlinx.coroutines.delay(1000L)
@@ -83,7 +86,6 @@ fun ForgetPasswordScreen(
             isResendEnabled = true
         }
     }
-
 
     LaunchedEffect(requestVerificationCodeState) {
         when (val currentState = requestVerificationCodeState) {
@@ -122,15 +124,19 @@ fun ForgetPasswordScreen(
         paddingValues = paddingValues,
         onSendCodeAgainClick = {
             if (isResendEnabled) {
-                resendTimer = 30
-                isResendEnabled = false
-                viewModel.sendForgetPasswordCode(isInitialCodeRequest)
+                val success = viewModel.sendForgetPasswordCode(isInitialCodeRequest)
+                if (success) {
+                    resendTimer = 30
+                    isResendEnabled = false
+                }
             }
         },
-        onRestoreClick =  {
-            resendTimer = 30
-            isResendEnabled = false
-            viewModel.sendForgetPasswordCode(isFirstRequest)
+        onRestoreClick = {
+            val success = viewModel.sendForgetPasswordCode(isFirstRequest)
+            if (success) {
+                resendTimer = 30
+                isResendEnabled = false
+            }
         },
         onCreateAccountClick = onCreateAccountClick,
         isButtonEnabled = viewModel.isLoginButtonEnabled(),
@@ -252,6 +258,7 @@ fun ForgetPasswordScreenUI(
                         modifier = Modifier.weight(1f)
                     )
                 }
+
                 Text(
                     text = if (isResendEnabled || resendTimer == 0) {
                         stringResource(com.project.feature_auth_module.R.string.send_code_again)
@@ -269,9 +276,7 @@ fun ForgetPasswordScreenUI(
                     },
                     modifier = Modifier
                         .clickable(enabled = isResendEnabled) {
-                            if (isResendEnabled) {
-                                onSendCodeAgainClick.invoke()
-                            }
+                            onSendCodeAgainClick.invoke()
                         }
                         .padding(0.dp),
                     textAlign = TextAlign.End

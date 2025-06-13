@@ -6,7 +6,7 @@ import java.util.regex.Pattern
 object ValidationUtils {
 
     sealed class ValidationResult {
-        object Success : ValidationResult()
+        data object Success : ValidationResult()
         data class Error(val message: String) : ValidationResult()
     }
 
@@ -127,7 +127,7 @@ object ValidationUtils {
         return ValidationResult.Success
     }
 
-    fun validateCode(code: String): ValidationResult {
+    private fun validateCode(code: String): ValidationResult {
         val trimmedCode = code.trim()
 
         if (trimmedCode.isEmpty()) {

@@ -117,39 +117,35 @@ class ForgetPasswordViewModel(
         }
     }
 
-    fun sendForgetPasswordCode(request: Boolean) {
+    fun sendForgetPasswordCode(request: Boolean): Boolean {
         val currentState = _formState.value
 
-        val validateEmailState = currentState.copy(
-            emailError = validateEmailForm(currentState.email.raw)
+        val emailError = validateEmailForm(currentState.email.raw)
+        val codeError = if (showCodeField.value) validateCodeForm(currentState.code.raw) else null
+
+        _formState.value = currentState.copy(
+            emailError = emailError,
+            codeError = codeError
         )
 
-        val validateState = if (_showCodeField.value) {
-            validateEmailState.copy(
-                codeError = validateCodeForm(currentState.code.raw)
-            )
-        } else {
-            validateEmailState
+        if (emailError != null || (showCodeField.value && codeError != null)) {
+            return false
         }
-
-        _formState.value = validateState
-
-        if (hasValidationErrors()) {
-            return
-        }
-
-        val registrationModel = ForgetPasswordModel(
-            email = validateState.email.raw,
-            isResent = request,
-        )
 
         viewModelScope.launch {
             _requestVerificationCodeState.value = ForgetPasswordUiState.Loading
+            val registrationModel = ForgetPasswordModel(
+                email = currentState.email.raw,
+                isResent = request,
+            )
+
             val forgetPasswordRequest = registrationModel.toResendVerificationCodeRequest()
             val response = resendEmailVerificationCodeUseCase.invoke(forgetPasswordRequest)
 
             handleSendVerificationCodeRequest(response)
         }
+
+        return true
     }
 
     private fun handleSendVerificationCodeRequest(response: RequestResult<ResendVerificationCodeResponse, DataError.ResendEmailVerificationCodeAuth>) {
