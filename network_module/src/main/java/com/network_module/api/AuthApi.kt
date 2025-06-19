@@ -4,9 +4,11 @@ import com.network_module.model.request.EmailRegistrationRequest
 import com.network_module.model.request.EmailVerificationRequest
 import com.network_module.model.request.LoginWithEmailPassRequest
 import com.network_module.model.request.ResendVerificationCodeRequest
+import com.network_module.model.request.SetNewPasswordRequest
 import com.network_module.model.response.EmailRegistrationResponse
 import com.network_module.model.response.EmailVerificationResponse
 import com.network_module.model.response.LoginWithEmailPassResponse
+import com.network_module.model.response.SetNewPasswordResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.PATCH
@@ -26,4 +28,6 @@ interface AuthApi {
     @POST("auth/login")
     suspend fun loginWithEmailAndPassword(@Body loginWithEmailPassRequest: LoginWithEmailPassRequest): Response<LoginWithEmailPassResponse>
 
+    @PATCH("auth/set-new-password")
+    suspend fun setNewPassword(@Body setNewPasswordRequest: SetNewPasswordRequest): Response<SetNewPasswordResponse>
 }

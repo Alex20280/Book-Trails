@@ -40,14 +40,12 @@ class ForgetPasswordViewModel(
     private val _formState = mutableStateOf(ForgetPasswordFormState())
     val formState: State<ForgetPasswordFormState> = _formState
 
-
     fun resetForgetPasswordState() {
         _requestVerificationCodeState.value = ForgetPasswordUiState.None
     }
 
     fun setShowCodeField(show: Boolean) {
         _showCodeField.value = show
-        // Сбрасываем код при скрытии поля
         if (!show) {
             _formState.value = _formState.value.copy(
                 code = AuthFields.VerificationCode(""),

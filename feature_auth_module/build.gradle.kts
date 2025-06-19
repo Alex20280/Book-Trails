@@ -56,6 +56,8 @@ dependencies {
     //Compose
     implementation(libs.androidx.compose.ui.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)  //Added
+    debugImplementation(libs.androidx.ui.test.manifest)  //Added
 
     //Koin
     implementation (libs.koin.android)

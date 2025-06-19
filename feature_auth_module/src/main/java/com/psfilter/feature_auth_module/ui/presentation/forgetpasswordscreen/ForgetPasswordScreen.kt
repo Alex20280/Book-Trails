@@ -24,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,7 +57,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ForgetPasswordScreen(
     paddingValues: PaddingValues,
-    navigateToCreateNewPassword: (String) -> Unit,
+    navigateToCreateNewPassword: (String, String) -> Unit,
     onCreateAccountClick: () -> Unit,
 ) {
 
@@ -91,7 +90,6 @@ fun ForgetPasswordScreen(
         when (val currentState = requestVerificationCodeState) {
             is ForgetPasswordUiState.Success -> {
                 showLoader.value = false
-                //showCodeField.value = true
                 viewModel.setShowCodeField(true)
                 isVerificationCodeSentOut.value = true
 
@@ -113,6 +111,7 @@ fun ForgetPasswordScreen(
             }
 
             else -> {
+                viewModel.setShowCodeField(false)
                 showLoader.value = false
             }
         }
@@ -175,7 +174,7 @@ fun ForgetPasswordScreenUI(
     formState: ForgetPasswordFormState,
     forgetPasswordState: ForgetPasswordUiState,
     showCodeField: Boolean,
-    navigateToCreateNewPassword: (String) -> Unit,
+    navigateToCreateNewPassword: (String, String) -> Unit,
     viewModel: ForgetPasswordViewModel,
     resendTimer: Int,
     isResendEnabled: Boolean,
@@ -316,8 +315,9 @@ fun ForgetPasswordScreenUI(
                 onClick = {
                     if (forgetPasswordState is ForgetPasswordUiState.Success){
                         val codeToPass = formState.code.raw
+                        val email = formState.email.raw
                         viewModel.resetForgetPasswordState()
-                        navigateToCreateNewPassword.invoke(codeToPass)
+                        navigateToCreateNewPassword.invoke(codeToPass, email)
                     } else {
                         onRestoreClick.invoke()
                     }

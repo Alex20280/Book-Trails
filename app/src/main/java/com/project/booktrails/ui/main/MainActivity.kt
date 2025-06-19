@@ -437,9 +437,10 @@ fun BookTrailsApp() {
                 ) {
                     ForgetPasswordScreen(
                         paddingValues = innerPadding,
-                        navigateToCreateNewPassword = {
+                        navigateToCreateNewPassword = { id, email ->
                             navController.navigate(
-                                NavigationScreens.CreateNewPassword(it))
+                                NavigationScreens.CreateNewPassword(id, email)
+                            )
                         },
                         onCreateAccountClick = {
                             navController.navigate(
@@ -459,7 +460,12 @@ fun BookTrailsApp() {
                     CreateNewPasswordScreen(
                         paddingValues = innerPadding,
                         verificationCode = idArgs.id,
-                        onSaveClick = { navController.navigate(NavigationScreens.LoginScreen) },
+                        email = idArgs.email,
+                        navigateToLoginScreen = {
+                            navController.navigate(NavigationScreens.LoginScreen) {
+                                popUpTo(NavigationScreens.ForgetPasswordScreen) { inclusive = true }
+                            }
+                        },
                     )
                 }
 

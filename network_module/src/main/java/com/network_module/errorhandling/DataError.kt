@@ -35,6 +35,15 @@ sealed interface DataError : Error {
         NOT_FOUND
     }
 
+    enum class SetNewPasswordAuth : DataError {
+        USER_NOT_FOUND,
+        INCORRECT_PASSWORD,
+        INVALID_RESET_CODE,
+        NETWORK_TIMEOUT,
+        NETWORK_ERROR,
+        UNEXPECTED_ERROR,
+    }
+
 
     enum class ForgetPasswordAuth : DataError {
         NOT_FOUND,

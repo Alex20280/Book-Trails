@@ -26,7 +26,7 @@ sealed class NavigationScreens(val icon: Int, val route: String) {
     @Serializable
     data object ForgetPasswordScreen: NavigationScreens(0, "")
     @Serializable
-    data class CreateNewPassword(val id: String): NavigationScreens(0, "forgetpassword/{id}")
+    data class CreateNewPassword(val id: String, val email:String): NavigationScreens(0, "forgetpassword/{id}")
     @Serializable
     data object HomeScreen: NavigationScreens(com.project.booktrails.R.drawable.book_icon, "home")
     @Serializable

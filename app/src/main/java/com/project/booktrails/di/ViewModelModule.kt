@@ -1,5 +1,6 @@
 package com.project.booktrails.di
 
+import com.psfilter.feature_auth_module.ui.presentation.createnewpassword.viewmodel.SetNewPasswordViewModel
 import com.psfilter.feature_auth_module.ui.presentation.forgetpasswordscreen.viewmodel.ForgetPasswordViewModel
 import com.psfilter.feature_auth_module.ui.presentation.loginscreen.viewmodel.LoginViewModel
 import com.psfilter.feature_auth_module.ui.presentation.signupscreen.viewmodel.SignUpViewModel
@@ -14,4 +15,5 @@ val viewModelModule = module {
     viewModel { VerifyEmailViewModel(get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { ForgetPasswordViewModel(get()) }
+    viewModel { SetNewPasswordViewModel(get()) }
 }

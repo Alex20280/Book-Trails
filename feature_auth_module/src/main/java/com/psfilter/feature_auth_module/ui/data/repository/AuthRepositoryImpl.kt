@@ -7,10 +7,12 @@ import com.network_module.model.request.EmailRegistrationRequest
 import com.network_module.model.request.EmailVerificationRequest
 import com.network_module.model.request.LoginWithEmailPassRequest
 import com.network_module.model.request.ResendVerificationCodeRequest
+import com.network_module.model.request.SetNewPasswordRequest
 import com.network_module.model.response.EmailRegistrationResponse
 import com.network_module.model.response.EmailVerificationResponse
 import com.network_module.model.response.LoginWithEmailPassResponse
 import com.network_module.model.response.ResendVerificationCodeResponse
+import com.network_module.model.response.SetNewPasswordResponse
 import com.psfilter.feature_auth_module.ui.domain.AuthRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -133,6 +135,53 @@ class AuthRepositoryImpl(
                 RequestResult.Error(DataError.EmailPasswordAuth.UNEXPECTED_ERROR)
             }
         }
+
+    override suspend fun setNewPassword(
+        setNewPasswordRequest: SetNewPasswordRequest
+    ): RequestResult<SetNewPasswordResponse, DataError.SetNewPasswordAuth> =
+        withContext(ioDispatcher) {
+            try {
+                val response = registerApi.setNewPassword(setNewPasswordRequest)
+                if (response.isSuccessful && response.body() != null) {
+                    RequestResult.Success(response.body()!!)
+                } else {
+                    val errorType = when (response.code()) {
+                        400 -> {
+                            val errorMessage = response.errorBody()?.string() ?: ""
+                            handle400Error(errorMessage)
+                        }
+
+                        404 -> DataError.SetNewPasswordAuth.USER_NOT_FOUND
+                        else -> DataError.SetNewPasswordAuth.UNEXPECTED_ERROR
+                    }
+                    RequestResult.Error(errorType)
+                }
+            } catch (exception: SocketTimeoutException) {
+                RequestResult.Error(DataError.SetNewPasswordAuth.NETWORK_TIMEOUT)
+            } catch (exception: IOException) {
+                RequestResult.Error(DataError.SetNewPasswordAuth.NETWORK_ERROR)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                RequestResult.Error(DataError.SetNewPasswordAuth.UNEXPECTED_ERROR)
+            }
+        }
+
+    private fun handle400Error(errorMessage: String): DataError.SetNewPasswordAuth {
+        return when {
+            errorMessage.contains(
+                "password must contain one capital letter, one digit and one special character",
+                ignoreCase = true
+            ) -> {
+                DataError.SetNewPasswordAuth.INCORRECT_PASSWORD
+            }
+
+            errorMessage.contains("Invalid reset code", ignoreCase = true) -> {
+                DataError.SetNewPasswordAuth.INVALID_RESET_CODE
+            }
+
+            else -> DataError.SetNewPasswordAuth.UNEXPECTED_ERROR
+        }
+    }
 
     /*    override suspend fun receiveFirebaseId(): String? {
             return firebaseAuth.auth.uid

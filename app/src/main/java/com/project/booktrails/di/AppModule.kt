@@ -5,6 +5,7 @@ import com.psfilter.feature_auth_module.ui.domain.AuthRepository
 import com.psfilter.feature_auth_module.ui.domain.usecase.LoginWithEmailPasswordUseCase
 import com.psfilter.feature_auth_module.ui.domain.usecase.RegisterWithEmailAndPasswordUseCase
 import com.psfilter.feature_auth_module.ui.domain.usecase.ResendEmailVerificationCodeUseCase
+import com.psfilter.feature_auth_module.ui.domain.usecase.SetNewPasswordUseCase
 import com.psfilter.feature_auth_module.ui.domain.usecase.VerifyEmailUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -22,4 +23,5 @@ val appModule = module {
     single { VerifyEmailUseCase(get()) }
     single { ResendEmailVerificationCodeUseCase(get()) }
     single { LoginWithEmailPasswordUseCase(get()) }
+    single { SetNewPasswordUseCase(get()) }
 }

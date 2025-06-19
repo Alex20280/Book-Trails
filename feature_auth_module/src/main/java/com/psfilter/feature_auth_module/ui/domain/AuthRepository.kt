@@ -6,10 +6,12 @@ import com.network_module.model.request.EmailVerificationRequest
 import com.network_module.model.request.EmailRegistrationRequest
 import com.network_module.model.request.LoginWithEmailPassRequest
 import com.network_module.model.request.ResendVerificationCodeRequest
+import com.network_module.model.request.SetNewPasswordRequest
 import com.network_module.model.response.EmailRegistrationResponse
 import com.network_module.model.response.EmailVerificationResponse
 import com.network_module.model.response.LoginWithEmailPassResponse
 import com.network_module.model.response.ResendVerificationCodeResponse
+import com.network_module.model.response.SetNewPasswordResponse
 
 interface AuthRepository {
 
@@ -20,5 +22,7 @@ interface AuthRepository {
     suspend fun resendEmailVerificationCode(resendVerificationCodeRequest: ResendVerificationCodeRequest): RequestResult<ResendVerificationCodeResponse, DataError.ResendEmailVerificationCodeAuth>
 
     suspend fun loginWithEmailAndPassword(loginWithEmailPassRequest: LoginWithEmailPassRequest): RequestResult<LoginWithEmailPassResponse, DataError.EmailPasswordAuth>
+
+    suspend fun setNewPassword(setNewPasswordRequest: SetNewPasswordRequest): RequestResult<SetNewPasswordResponse, DataError.SetNewPasswordAuth>
 
 }
